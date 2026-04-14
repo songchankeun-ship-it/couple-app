@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['react']
+    branches: ['couple-app']h
 
 permissions:
   contents: read
