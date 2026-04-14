@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['couple-app']h
+    branches: ['couple-app']
+  workflow_dispatch:
+      
 
 permissions:
   contents: read
