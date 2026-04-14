@@ -22,6 +22,16 @@ const STORAGE_KEY = 'couple_app_data'
 const ROOM_KEY = 'couple_room_name'
 const CONFIG_KEY = 'couple_firebase_config'
 
+const DEFAULT_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyAkr6TQDRGVjfIRLxVNaRN0JhQlXEaW",
+    authDomain: "couple-app-16c09.firebaseapp.com",
+    databaseURL: "https://couple-app-16c09-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "couple-app-16c09",
+    storageBucket: "couple-app-16c09.firebasestorage.app",
+    messagingSenderId: "787816519498",
+    appId: "1:787816519498:web:7c9b5f68e3dfe6dd76f73"
+}
+
 export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<CoupleData>(() => {
     try {
@@ -51,11 +61,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const configStr = localStorage.getItem(CONFIG_KEY)
-      if (configStr) {
-        const config = JSON.parse(configStr)
-        const app = initializeApp(config)
-        setDb(getDatabase(app))
-      }
+            const config = configStr ? JSON.parse(configStr) : DEFAULT_FIREBASE_CONFIG
+            const app = initializeApp(config)
+            setDb(getDatabase(app))
     } catch (e) {
       console.error('Firebase init error:', e)
     }
