@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, ChevronRight } from 'lucide-react'
 
 interface DateCourse {
@@ -123,85 +124,137 @@ export default function DateFeed() {
   }
 
   return (
-    <div className="px-4 pb-24 animate-fade-in-up">
+    <div className="px-4 pb-24">
       {/* Header */}
-      <div className="py-3">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="py-3"
+      >
         <h2 className="text-lg font-black text-gray-800">💡 데이트 코스 추천</h2>
         <p className="text-xs text-gray-400 mt-0.5">오늘은 어떤 데이트 할까?</p>
-      </div>
+      </motion.div>
 
       {/* Category Filter */}
       <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-3"
         style={{ maskImage: 'linear-gradient(90deg, black 90%, transparent 100%)' }}>
-        {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setSelectedCat(cat)}
-            className={`px-4 py-2 rounded-full text-[12px] font-bold whitespace-nowrap border-[1.5px] transition-all shrink-0
+        {CATEGORIES.map((cat, i) => (
+          <motion.button
+            key={cat}
+            onClick={() => setSelectedCat(cat)}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.04 }}
+            className={`relative px-4 py-2 rounded-full text-[12px] font-bold whitespace-nowrap shrink-0 transition-all duration-300
               ${selectedCat === cat
-                ? 'bg-teal text-white border-teal shadow-[0_4px_14px_rgba(236,72,153,0.3)]'
-                : 'bg-white text-gray-500 border-gray-200'}`}>
-            {cat}
-          </button>
+                ? 'text-white shadow-[0_4px_16px_rgba(236,72,153,0.25)]'
+                : 'bg-white/70 text-gray-500 border border-white/50 backdrop-blur-sm'}`}
+          >
+            {selectedCat === cat && (
+              <motion.div
+                layoutId="cat-pill"
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-secondary"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">{cat}</span>
+          </motion.button>
         ))}
       </div>
 
       {/* Course Cards */}
       <div className="space-y-3">
-        {filtered.map(course => {
-          const isExpanded = expandedId === course.id
-          const isLiked = likedIds.has(course.id)
-          return (
-            <div key={course.id} className="glass-card overflow-hidden">
-              {/* Card Header */}
-              <div className="p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : course.id)}>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-2xl">{course.emoji}</span>
-                      <h3 className="text-[15px] font-extrabold text-gray-800">{course.title}</h3>
+        <AnimatePresence mode="popLayout">
+          {filtered.map((course, idx) => {
+            const isExpanded = expandedId === course.id
+            const isLiked = likedIds.has(course.id)
+            return (
+              <motion.div
+                key={course.id}
+                layout
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: idx * 0.05 }}
+                className="glass-card overflow-hidden"
+              >
+                <div className="p-4 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : course.id)}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <motion.span
+                          animate={isExpanded ? { rotate: [0, -10, 10, 0] } : {}}
+                          className="text-2xl"
+                        >{course.emoji}</motion.span>
+                        <h3 className="text-[15px] font-extrabold text-gray-800">{course.title}</h3>
+                      </div>
+                      <p className="text-[13px] text-gray-500 leading-relaxed">{course.desc}</p>
+                      <div className="flex gap-1.5 mt-2 flex-wrap">
+                        {course.tags.map(tag => (
+                          <span key={tag} className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-primary/5 to-secondary/5 text-[10px] font-bold text-primary border border-primary/10">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <p className="text-[13px] text-gray-500 leading-relaxed">{course.desc}</p>
-                    <div className="flex gap-1.5 mt-2 flex-wrap">
-                      {course.tags.map(tag => (
-                        <span key={tag} className="px-2.5 py-0.5 rounded-full bg-pink-50 text-[10px] font-bold text-pink-400 border border-pink-100">
-                          #{tag}
-                        </span>
-                      ))}
+                    <div className="flex items-center gap-2 ml-3">
+                      <motion.button
+                        onClick={(e) => { e.stopPropagation(); toggleLike(course.id) }}
+                        whileTap={{ scale: 1.3 }}
+                        className={`p-2 rounded-full transition ${isLiked ? 'bg-primary/10' : 'bg-gray-50'}`}
+                      >
+                        <Heart size={16} className={`transition-all duration-300 ${isLiked ? 'text-primary fill-primary' : 'text-gray-300'}`} />
+                      </motion.button>
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 90 : 0 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                      >
+                        <ChevronRight size={16} className="text-gray-300" />
+                      </motion.div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 ml-3">
-                    <button onClick={(e) => { e.stopPropagation(); toggleLike(course.id) }}
-                      className={`p-2 rounded-full transition ${isLiked ? 'bg-pink-100' : 'bg-gray-50'}`}>
-                      <Heart size={16} className={isLiked ? 'text-pink-500 fill-pink-500' : 'text-gray-300'} />
-                    </button>
-                    <ChevronRight size={16} className={`text-gray-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                   </div>
                 </div>
-              </div>
 
-              {/* Expanded: Course Steps */}
-              {isExpanded && (
-                <div className="px-4 pb-4 animate-fade-in-up">
-                  <div className="border-t border-gray-100 pt-3">
-                    <div className="text-[11px] font-bold text-gray-400 mb-2">코스 순서</div>
-                    <div className="space-y-2">
-                      {course.spots.map((spot, i) => (
-                        <div key={i} className="flex items-center gap-3">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                            {i + 1}
-                          </div>
-                          <div className="flex-1 flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2.5">
-                            <span className="text-[13px] font-semibold text-gray-700">{spot.name}</span>
-                            <span className="text-[10px] font-bold text-pink-400 bg-pink-50 px-2 py-0.5 rounded-full">{spot.type}</span>
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-4 pb-4">
+                        <div className="border-t border-gray-100/50 pt-3">
+                          <div className="text-[11px] font-bold text-gray-400 mb-2">코스 순서</div>
+                          <div className="space-y-2">
+                            {course.spots.map((spot, i) => (
+                              <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.08 }}
+                                className="flex items-center gap-3"
+                              >
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-[0_2px_8px_rgba(236,72,153,0.2)]">
+                                  {i + 1}
+                                </div>
+                                <div className="flex-1 flex items-center justify-between bg-white/60 backdrop-blur-sm rounded-xl px-3 py-2.5 border border-white/50">
+                                  <span className="text-[13px] font-semibold text-gray-700">{spot.name}</span>
+                                  <span className="text-[10px] font-bold gradient-text bg-gradient-to-r from-primary/5 to-secondary/5 px-2 py-0.5 rounded-full">{spot.type}</span>
+                                </div>
+                              </motion.div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          })}
+        </AnimatePresence>
       </div>
     </div>
   )

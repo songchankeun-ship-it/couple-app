@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { SPACE_PRESETS } from '../../types/data'
 import type { SpaceType } from '../../types/data'
@@ -87,97 +88,107 @@ export default function Settings() {
     : 0
 
   return (
-    <div className="px-4 pb-24 animate-fade-in-up">
+    <div className="px-4 pb-24">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-bold shadow-lg animate-fade-in-up">
+        <motion.div
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-xl bg-gray-800/90 backdrop-blur-md text-white text-sm font-bold shadow-lg"
+        >
           {toast}
-        </div>
+        </motion.div>
       )}
 
       {/* Profile Section */}
-      <div className="glass-card p-6 mb-3 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-6 mb-3 text-center mt-3"
+      >
         <div className="relative inline-block mb-3">
-          <div 
+          <motion.div
+            whileTap={{ scale: 0.95 }}
             onClick={() => photoRef.current?.click()}
-            className="w-24 h-24 rounded-full bg-gradient-to-br from-teal-light to-teal-dark flex items-center justify-center mx-auto cursor-pointer hover:opacity-80 transition overflow-hidden border-4 border-white shadow-lg"
+            className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center mx-auto cursor-pointer overflow-hidden border-4 border-white shadow-[0_8px_24px_rgba(236,72,153,0.15)]"
           >
             {data.couplePhoto ? (
               <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" />
             ) : (
               <span className="text-4xl">💑</span>
             )}
-          </div>
-          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-teal text-white flex items-center justify-center text-xs shadow-md cursor-pointer"
+          </motion.div>
+          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-xs shadow-md cursor-pointer"
             onClick={() => photoRef.current?.click()}>
             📷
           </div>
           <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
         </div>
         <div className="text-lg font-black text-gray-800">
-          {data.names.me || '나'} ❤️ {data.names.you || '너'}
+          {data.names.me || '나'} <span className="gradient-text">❤️</span> {data.names.you || '너'}
         </div>
         {data.ddayDate && (
-          <div className="text-xs text-gray-400 mt-1">만난 지 {diffDays}일</div>
+          <div className="text-xs text-gray-400 mt-1">만난 지 <span className="gradient-text font-bold">{diffDays}</span>일</div>
         )}
-      </div>
+      </motion.div>
 
       {/* Name Setting */}
-      <div className="glass-card p-4 mb-3">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-4 mb-3">
         <div className="flex items-center justify-between mb-1">
           <div className="text-sm font-bold text-gray-800">👤 이름 설정</div>
           <button onClick={() => { setEditNames(!editNames); setMyName(data.names.me || ''); setYourName(data.names.you || '') }}
-            className="text-xs text-teal font-bold">{editNames ? '취소' : '변경'}</button>
+            className="text-xs gradient-text font-bold">{editNames ? '취소' : '변경'}</button>
         </div>
         {editNames ? (
           <div className="mt-3 space-y-2">
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500 w-8">나</span>
               <input value={myName} onChange={e => setMyName(e.target.value)} placeholder="내 이름"
-                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-teal" />
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary bg-white/80" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500 w-8">너</span>
               <input value={yourName} onChange={e => setYourName(e.target.value)} placeholder="상대방 이름"
-                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-teal" />
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary bg-white/80" />
             </div>
-            <button onClick={saveNames}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm active:scale-[0.97]">저장</button>
+            <motion.button whileTap={{ scale: 0.97 }} onClick={saveNames}
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm">저장</motion.button>
           </div>
         ) : (
           <div className="text-xs text-gray-500 mt-1">
             {data.names.me || '(미설정)'} & {data.names.you || '(미설정)'}
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* D-day Setting */}
-      <div className="glass-card p-4 mb-3">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-4 mb-3">
         <div className="flex items-center justify-between mb-1">
           <div className="text-sm font-bold text-gray-800">💕 사귄 날짜</div>
           <button onClick={() => { setEditDday(!editDday); setDdayInput(data.ddayDate || '') }}
-            className="text-xs text-teal font-bold">{editDday ? '취소' : '변경'}</button>
+            className="text-xs gradient-text font-bold">{editDday ? '취소' : '변경'}</button>
         </div>
         {editDday ? (
           <div className="mt-3 space-y-2">
             <input type="date" value={ddayInput} onChange={e => setDdayInput(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-teal" />
-            <button onClick={saveDday}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm active:scale-[0.97]">저장</button>
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary bg-white/80" />
+            <motion.button whileTap={{ scale: 0.97 }} onClick={saveDday}
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm">저장</motion.button>
           </div>
         ) : (
           <div className="text-xs text-gray-500 mt-1">
             {data.ddayDate ? `${data.ddayDate} (${diffDays}일째)` : '아직 설정하지 않았어요'}
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Firebase Room Connection */}
-      <div className="glass-card p-4 mb-3">
+      {/* Firebase Room */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-4 mb-3">
         <div className="flex items-center justify-between mb-1">
           <div className="text-sm font-bold text-gray-800">🔗 실시간 동기화</div>
           <button onClick={() => setShowRoom(!showRoom)}
-            className="text-xs text-teal font-bold">{showRoom ? '닫기' : '설정'}</button>
+            className="text-xs gradient-text font-bold">{showRoom ? '닫기' : '설정'}</button>
         </div>
         <div className="flex items-center gap-2 mt-1">
           <span className={`w-2 h-2 rounded-full ${connected ? 'bg-green-400 animate-pulse' : roomName ? 'bg-yellow-400' : 'bg-gray-300'}`} />
@@ -189,7 +200,7 @@ export default function Settings() {
           <div className="mt-3 space-y-2">
             {roomName ? (
               <div className="flex items-center gap-2">
-                <div className="flex-1 px-3 py-2 rounded-lg bg-gray-50 text-sm text-gray-600">현재: {roomName}</div>
+                <div className="flex-1 px-3 py-2 rounded-lg bg-gray-50/80 text-sm text-gray-600">현재: {roomName}</div>
                 <button onClick={() => { disconnect(); showToast('연결 해제됨') }}
                   className="px-4 py-2 rounded-lg bg-red-50 text-red-500 font-bold text-xs">해제</button>
               </div>
@@ -197,20 +208,20 @@ export default function Settings() {
             <div className="flex items-center gap-2">
               <input value={roomInput} onChange={e => setRoomInput(e.target.value)}
                 placeholder="방 이름 입력 (예: 우리집)"
-                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-teal" />
-              <button onClick={handleConnect}
-                className="px-4 py-2 rounded-lg bg-teal text-white font-bold text-xs active:scale-95">연결</button>
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary bg-white/80" />
+              <motion.button whileTap={{ scale: 0.95 }} onClick={handleConnect}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-bold text-xs">연결</motion.button>
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Space Type */}
-      <div className="glass-card p-4 mb-3">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-4 mb-3">
         <div className="flex items-center justify-between mb-1">
           <div className="text-sm font-bold text-gray-800">🏠 공간 유형</div>
           <button onClick={() => setShowSpaceType(!showSpaceType)}
-            className="text-xs text-teal font-bold">{showSpaceType ? '닫기' : '변경'}</button>
+            className="text-xs gradient-text font-bold">{showSpaceType ? '닫기' : '변경'}</button>
         </div>
         <div className="text-xs text-gray-500 mt-1">
           {data.spaceType ? `${SPACE_PRESETS[data.spaceType].emoji} ${SPACE_PRESETS[data.spaceType].label}` : '미설정'}
@@ -218,15 +229,19 @@ export default function Settings() {
         {showSpaceType && (
           <div className="mt-3 space-y-2">
             {(Object.entries(SPACE_PRESETS) as [SpaceType, typeof SPACE_PRESETS[SpaceType]][]).map(([type, preset]) => (
-              <button key={type} onClick={() => changeSpaceType(type)}
-                className={`w-full p-3 rounded-xl text-left flex items-center gap-3 transition border-2 ${data.spaceType === type ? 'border-teal bg-teal/5' : 'border-gray-100 hover:border-teal/30'}`}>
+              <motion.button
+                key={type}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => changeSpaceType(type)}
+                className={`w-full p-3 rounded-xl text-left flex items-center gap-3 transition border-2 ${data.spaceType === type ? 'border-primary/30 bg-gradient-to-r from-primary/5 to-secondary/5' : 'border-gray-100 hover:border-primary/20'}`}
+              >
                 <span className="text-2xl">{preset.emoji}</span>
                 <div>
                   <div className="text-sm font-bold text-gray-800">{preset.label}</div>
                   <div className="text-[10px] text-gray-400">{preset.desc}</div>
                 </div>
-                {data.spaceType === type && <span className="ml-auto text-teal text-xs font-bold">현재</span>}
-              </button>
+                {data.spaceType === type && <span className="ml-auto text-xs font-bold gradient-text">현재</span>}
+              </motion.button>
             ))}
             <button onClick={resetToOnboarding}
               className="w-full p-3 rounded-xl text-center text-xs text-gray-400 border-2 border-dashed border-gray-200 hover:border-gray-300 transition mt-2">
@@ -234,14 +249,14 @@ export default function Settings() {
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Data Management */}
-      <div className="glass-card p-4 mb-3">
+      {/* App Info */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-4 mb-3">
         <div className="text-sm font-bold text-gray-800 mb-2">📱 앱 정보</div>
         <div className="space-y-1.5 text-xs text-gray-500">
           <div className="flex justify-between">
-            <span>버전</span><span className="font-semibold">React 2.0</span>
+            <span>버전</span><span className="font-semibold gradient-text">v3.0 ✨</span>
           </div>
           <div className="flex justify-between">
             <span>데이터</span><span className="font-semibold">{data.chat.length}개 채팅 · {data.events.length}개 일정 · {data.album.length}장 사진</span>
@@ -250,7 +265,7 @@ export default function Settings() {
             <span>Firebase</span><span className="font-semibold">{connected ? '✅ 연결됨' : '❌ 미연결'}</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

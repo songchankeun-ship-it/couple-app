@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from './contexts/FirebaseContext'
 import { APP_LAYOUT } from './config/spaceConfig'
 import type { TabGroup } from './config/spaceConfig'
@@ -18,8 +19,21 @@ import { Wishlist } from './components/calendar/CalendarFeatures'
 import AnniversaryList from './components/home/AnniversaryList'
 import Settings from './components/more/Settings'
 
-// Onboarding (간소화 — 커플 전용)
+// Onboarding
 import CoupleOnboarding from './components/onboarding/CoupleOnboarding'
+
+const pageVariants = {
+  initial: { opacity: 0, y: 12, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -8, scale: 0.98 },
+}
+
+const pageTransition = {
+  type: 'spring' as const,
+  stiffness: 300,
+  damping: 30,
+  mass: 0.8,
+}
 
 function Content({ tab }: { tab: string }) {
   switch (tab) {
@@ -44,10 +58,10 @@ export default function App() {
   const [mainTab, setMainTab] = useState<TabGroup>('home')
   const [subTab, setSubTab] = useState('homedash')
 
-  // 온보딩: 커플 전용
+  // 온보딩
   if (!data.spaceType) {
     return (
-      <div className="max-w-[480px] mx-auto min-h-screen relative">
+      <div className="max-w-[480px] mx-auto min-h-screen relative overflow-hidden">
         <CoupleOnboarding />
       </div>
     )
@@ -59,7 +73,6 @@ export default function App() {
     if (subs?.length) {
       setSubTab(subs[0].id)
     } else {
-      // 서브탭이 없는 경우 (채팅)
       setSubTab(tab)
     }
   }
@@ -67,15 +80,32 @@ export default function App() {
   const currentSubs = layout.subTabs[mainTab] || []
 
   return (
-    <div className="max-w-[480px] mx-auto min-h-screen relative">
+    <div className="max-w-[480px] mx-auto min-h-screen relative overflow-hidden">
+      {/* Sub nav */}
       {currentSubs.length > 1 && (
-        <div className={subTab === 'homedash' ? 'pt-3' : 'pt-4'}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={subTab === 'homedash' ? 'pt-3' : 'pt-4'}
+        >
           <SubNav tabs={currentSubs} active={subTab} onChange={setSubTab} />
-        </div>
+        </motion.div>
       )}
-      <main>
-        <Content tab={subTab} />
-      </main>
+
+      {/* Page content with animation */}
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={subTab}
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={pageTransition}
+        >
+          <Content tab={subTab} />
+        </motion.main>
+      </AnimatePresence>
+
       <BottomNav
         tabs={layout.bottomTabs}
         active={mainTab}

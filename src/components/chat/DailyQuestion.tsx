@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 
 const QUESTIONS = [
@@ -44,7 +45,6 @@ export default function DailyQuestion() {
   const yourAnswer = dailyData.you || ''
   const bothDone = !!(myAnswer && yourAnswer)
 
-  // Streak calc
   const dates = Object.keys(data.questions?.daily || {}).sort().reverse()
   let streak = 0
   for (let i = 0; i < dates.length; i++) {
@@ -73,37 +73,72 @@ export default function DailyQuestion() {
   }
 
   return (
-    <div className="px-4 pb-24 animate-fade-in-up">
-      {/* Header */}
-      <div className="flex items-center justify-between py-3">
-        <div className="flex items-center gap-1.5 bg-white rounded-full px-4 py-2 shadow-sm border border-gray-100">
+    <div className="px-4 pb-24">
+      {/* Streak */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between py-3"
+      >
+        <div className="flex items-center gap-1.5 glass-card-solid !rounded-full px-4 py-2">
           <span className="text-lg">{streak > 0 ? '🔥' : '💤'}</span>
-          <span className="text-lg font-black text-teal-dark">{streak}</span>
+          <span className="text-lg font-black gradient-text">{streak}</span>
           <span className="text-[11px] font-semibold text-gray-500">일 연속</span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Question Card */}
-      <div className="glass-card p-7 text-center mb-4 bg-gradient-to-br from-mint-bg/80 via-green-50/60 to-white border-teal/10">
-        <div className="inline-block px-3 py-1 rounded-full bg-teal/10 text-teal-dark text-[11px] font-bold mb-2">
-          {CAT_EMOJI[todayQ.cat] || '❓'} {todayQ.cat}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1 }}
+        className="glass-card p-7 text-center mb-4 relative overflow-hidden"
+      >
+        {/* Decorative */}
+        <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-secondary/8 to-transparent rounded-full -ml-10 -mt-10" />
+        <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-primary/8 to-transparent rounded-full -mr-6 -mb-6" />
+
+        <div className="relative z-10">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: 'spring' }}
+            className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-primary/10 to-secondary/10 text-primary-dark text-[11px] font-bold mb-2 border border-primary/10"
+          >
+            {CAT_EMOJI[todayQ.cat] || '❓'} {todayQ.cat}
+          </motion.div>
+          <div className="text-[11px] text-gray-400 font-semibold mb-4">
+            오늘의 질문 · {today.getMonth() + 1}/{today.getDate()}
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-xl font-black text-gray-800 leading-relaxed tracking-tight mb-3"
+          >
+            {todayQ.text}
+          </motion.div>
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-4xl opacity-20"
+          >
+            {todayQ.emoji}
+          </motion.div>
         </div>
-        <div className="text-[11px] text-gray-400 font-semibold mb-4">
-          오늘의 질문 · {today.getMonth() + 1}/{today.getDate()}
-        </div>
-        <div className="text-xl font-black text-gray-800 leading-relaxed tracking-tight mb-3">
-          {todayQ.text}
-        </div>
-        <div className="text-4xl opacity-30">{todayQ.emoji}</div>
-      </div>
+      </motion.div>
 
       {/* Answers */}
       <div className="space-y-3 mb-4">
-        {/* My answer */}
-        <div className="glass-card p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="glass-card p-4"
+        >
           <div className="text-[12px] font-bold text-gray-500 mb-2">{data.names.me || '나'}의 답변</div>
           {myAnswer ? (
-            <div className="bg-gradient-to-br from-mint-bg to-green-50 rounded-2xl px-4 py-3 text-[14px] font-medium text-teal-dark">
+            <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl px-4 py-3 text-[14px] font-medium text-gray-700 border border-primary/10">
               {myAnswer}
             </div>
           ) : (
@@ -113,42 +148,55 @@ export default function DailyQuestion() {
                 onChange={e => setAnswer(e.target.value)}
                 placeholder="답변을 적어주세요..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 focus:border-teal focus:ring-4 focus:ring-teal/10 outline-none text-[14px] bg-gray-50 focus:bg-white resize-none transition"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-[14px] bg-white/80 focus:bg-white resize-none transition"
               />
-              <button onClick={submitAnswer}
+              <motion.button
+                onClick={submitAnswer}
                 disabled={!answer.trim()}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-extrabold text-[15px] shadow-[0_4px_16px_rgba(13,148,136,0.3)] disabled:opacity-30 active:scale-[0.97] transition">
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+              >
                 답변하기
-              </button>
+              </motion.button>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Partner's answer */}
-        <div className="glass-card p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="glass-card p-4"
+        >
           <div className="text-[12px] font-bold text-gray-500 mb-2">{data.names.you || '너'}의 답변</div>
           {yourAnswer ? (
             myAnswer ? (
-              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl px-4 py-3 text-[14px] font-medium text-rose-800">
+              <div className="bg-gradient-to-br from-secondary/5 to-primary/5 rounded-2xl px-4 py-3 text-[14px] font-medium text-gray-700 border border-secondary/10">
                 {yourAnswer}
               </div>
             ) : (
-              <div className="bg-gray-50 rounded-2xl px-4 py-3 text-[13px] font-semibold text-gray-400 text-center">
+              <div className="bg-gray-50/80 backdrop-blur-sm rounded-2xl px-4 py-3 text-[13px] font-semibold text-gray-400 text-center">
                 🔒 내 답변을 먼저 작성하면 공개돼요
               </div>
             )
           ) : (
-            <div className="bg-gray-50 rounded-2xl px-4 py-3 text-[13px] font-semibold text-gray-400 text-center animate-pulse-soft">
+            <div className="bg-gray-50/80 backdrop-blur-sm rounded-2xl px-4 py-3 text-[13px] font-semibold text-gray-400 text-center animate-pulse-soft">
               ⏳ 아직 답변을 기다리고 있어요...
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {bothDone && (
-          <div className="text-center py-3 px-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-amber-50 text-[13px] font-bold text-amber-800">
-            ✨ 둘 다 답변 완료! 서로의 생각을 확인해보세요
-          </div>
-        )}
+        <AnimatePresence>
+          {bothDone && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-3 px-4 rounded-2xl bg-gradient-to-r from-gold/20 to-amber-100/50 text-[13px] font-bold text-amber-800 border border-gold/20 backdrop-blur-sm"
+            >
+              ✨ 둘 다 답변 완료! 서로의 생각을 확인해보세요
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

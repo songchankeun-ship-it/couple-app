@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 interface SubNavProps {
   tabs: { id: string; label: string }[]
   active: string
@@ -12,13 +14,18 @@ export default function SubNav({ tabs, active, onChange }: SubNavProps) {
         <button
           key={tab.id}
           onClick={() => onChange(tab.id)}
-          className={`px-4 py-2 rounded-full text-[13px] font-bold whitespace-nowrap border-[1.5px] transition-all duration-300 shrink-0
-            ${active === tab.id
-              ? 'bg-teal text-white border-teal shadow-[0_4px_14px_rgba(13,148,136,0.3)]'
-              : 'bg-white text-gray-500 border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
-            }`}
+          className="relative px-4 py-2 rounded-full text-[13px] font-bold whitespace-nowrap shrink-0 transition-colors duration-300"
         >
-          {tab.label}
+          {active === tab.id && (
+            <motion.div
+              layoutId="sub-pill"
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-secondary shadow-[0_4px_20px_rgba(236,72,153,0.25)]"
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
+          <span className={`relative z-10 ${active === tab.id ? 'text-white' : 'text-gray-500'}`}>
+            {tab.label}
+          </span>
         </button>
       ))}
     </div>

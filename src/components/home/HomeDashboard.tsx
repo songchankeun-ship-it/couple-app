@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
-// icons not needed for now
 
 const QUICK_PINGS = ['❤️', '🥰', '😘', '🤗', '💕', '😊', '🫶', '💪']
 
@@ -34,6 +34,7 @@ const QUESTIONS = [
 export default function HomeDashboard() {
   const { data, updateData, connected, roomName } = useFirebase()
   const [pingSent, setPingSent] = useState(false)
+  const [pingEmoji, setPingEmoji] = useState('')
 
   const diffDays = data.ddayDate
     ? Math.floor((Date.now() - new Date(data.ddayDate).getTime()) / 86400000) + 1
@@ -45,7 +46,6 @@ export default function HomeDashboard() {
     data.streak.current >= 7 ? '⚡' :
     data.streak.current >= 3 ? '✨' : '💤'
 
-  // 오늘의 질문
   const today = new Date()
   const todayStr = today.toISOString().split('T')[0]
   const dayIdx = Math.floor((today.getTime() - new Date(2024, 0, 1).getTime()) / 86400000)
@@ -63,164 +63,297 @@ export default function HomeDashboard() {
         date: todayStr,
       }]
     }))
+    setPingEmoji(emoji)
     setPingSent(true)
     setTimeout(() => setPingSent(false), 2000)
   }
 
   return (
-    <div className="animate-fade-in-up">
-      {/* Hero - D-Day */}
-      <div className="hero-gradient relative rounded-[32px] overflow-hidden mx-4 mt-2 mb-5 px-5 py-10 text-center shadow-[0_12px_40px_rgba(236,72,153,0.2)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.15)_0%,transparent_50%),radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.1)_0%,transparent_40%)]" />
+    <div className="pb-24">
+      {/* ── Hero Card ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        className="hero-gradient relative rounded-[28px] overflow-hidden mx-4 mt-3 mb-5 shadow-[0_16px_48px_rgba(167,139,250,0.25)]"
+      >
+        {/* Animated blobs */}
+        <div className="absolute top-[-20%] left-[-10%] w-40 h-40 bg-white/10 rounded-full animate-blob" />
+        <div className="absolute bottom-[-15%] right-[-5%] w-48 h-48 bg-white/8 rounded-full animate-blob" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[30%] right-[10%] w-20 h-20 bg-white/10 rounded-full animate-blob" style={{ animationDelay: '4s' }} />
 
-        <div className="relative z-10">
+        {/* Shimmer overlay */}
+        <div className="absolute inset-0 shimmer pointer-events-none" />
+
+        <div className="relative z-10 px-6 py-10 text-center">
           {data.ddayDate ? (
             <>
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-[11px] font-bold text-white/90 mb-3 border border-white/15">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold text-white/90 mb-4 border border-white/20"
+              >
                 💕 우리가 함께한 날
-              </div>
-              <div className="text-[72px] font-black text-white tracking-tighter leading-none mb-1 drop-shadow-lg animate-bounce-in">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.3 }}
+                className="text-[72px] font-black text-white tracking-tighter leading-none mb-1 glow-text"
+              >
                 {diffDays}
-              </div>
-              <div className="text-[12px] font-bold text-white/70 tracking-[3px] uppercase mb-4">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-[12px] font-bold text-white/60 tracking-[4px] uppercase mb-5"
+              >
                 days together
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-xs font-bold text-white border border-white/20">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center justify-center gap-2"
+              >
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm text-xs font-bold text-white border border-white/20">
                   {streakEmoji} {data.streak.current}일 연속
                 </span>
-              </div>
+              </motion.div>
             </>
           ) : (
-            <div className="text-white text-lg font-bold animate-float">💕 사귄 날짜를 설정해주세요</div>
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="text-white text-lg font-bold"
+            >
+              💕 사귄 날짜를 설정해주세요
+            </motion.div>
           )}
         </div>
 
         {/* Connection badge */}
         {roomName && (
-          <div className="relative z-10 mt-4">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold ${connected ? 'bg-white/20 text-white/90 border border-white/25' : 'bg-yellow-400/20 text-yellow-100 border border-yellow-300/30'}`}>
+          <div className="relative z-10 pb-5 text-center">
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold backdrop-blur-sm
+              ${connected
+                ? 'bg-white/15 text-white/90 border border-white/20'
+                : 'bg-yellow-400/20 text-yellow-100 border border-yellow-300/30'
+              }`}
+            >
               <span className={`w-1.5 h-1.5 rounded-full ${connected ? 'bg-green-300 animate-pulse' : 'bg-yellow-300'}`} />
               {connected ? `🔗 ${roomName}` : '⏳ 연결 중...'}
             </span>
           </div>
         )}
 
-        {/* Floating decorations */}
-        {['💖', '✨', '🌸', '💫'].map((emoji, i) => (
-          <span key={i} className="absolute text-sm animate-float opacity-60"
-            style={{ left: `${[8, 82, 42, 92][i]}%`, top: `${[12, 18, 72, 55][i]}%`, animationDelay: `${i * 0.8}s`, animationDuration: `${2.5 + i * 0.5}s` }}>
-            {emoji}
-          </span>
+        {/* Floating sparkles */}
+        {[15, 75, 50, 88].map((left, i) => (
+          <motion.span
+            key={`s${i}`}
+            className="absolute w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+            style={{ left: `${left}%`, top: `${18 + i * 16}%` }}
+            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0], rotate: [0, 180, 360] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.6 }}
+          />
         ))}
 
-        {/* Sparkles */}
-        {[15, 75, 50, 90].map((left, i) => (
-          <span key={`s${i}`} className="absolute w-1.5 h-1.5 rounded-full bg-white animate-sparkle shadow-[0_0_6px_rgba(255,255,255,0.6)]"
-            style={{ left: `${left}%`, top: `${20 + i * 15}%`, animationDelay: `${i * 0.6}s` }} />
-        ))}
+        <div className="absolute -bottom-px left-0 right-0 h-8 bg-bg rounded-t-[24px] z-20" />
+      </motion.div>
 
-        <div className="absolute -bottom-px left-0 right-0 h-8 bg-bg rounded-t-[28px] z-20" />
-      </div>
-
-      {/* Profile Section */}
-      <div className="flex items-center justify-center gap-6 py-2 mb-3">
-        <div className="text-center animate-fade-in-up stagger-1">
+      {/* ── Profile Section ── */}
+      <div className="flex items-center justify-center gap-6 py-2 mb-4">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-center"
+        >
           <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_20px_rgba(236,72,153,0.15)] overflow-hidden">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_24px_rgba(236,72,153,0.2)] overflow-hidden">
               {data.couplePhoto ? <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" /> : '🧑'}
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 text-xs animate-wiggle">💝</span>
+            <motion.span
+              animate={{ rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute -bottom-0.5 -right-0.5 text-xs"
+            >💝</motion.span>
           </div>
           <div className="text-[11px] font-bold text-gray-500 mt-2">{data.names.me || '나'}</div>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col items-center gap-1 animate-fade-in-up stagger-2">
-          <div className="flex items-center gap-1">
-            <div className="w-5 h-px bg-gradient-to-r from-transparent to-pink-300" />
-            <span className="text-lg animate-heartbeat">💕</span>
-            <div className="w-5 h-px bg-gradient-to-r from-pink-300 to-transparent" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, type: 'spring' }}
+          className="flex flex-col items-center gap-1"
+        >
+          <div className="flex items-center gap-1.5">
+            <div className="w-6 h-px bg-gradient-to-r from-transparent to-primary-light" />
+            <span className="text-xl animate-heartbeat">💕</span>
+            <div className="w-6 h-px bg-gradient-to-r from-primary-light to-transparent" />
           </div>
           {data.ddayDate && (
-            <span className="text-[10px] font-bold text-pink-300">D+{diffDays}</span>
+            <span className="text-[10px] font-extrabold gradient-text">D+{diffDays}</span>
           )}
-        </div>
+        </motion.div>
 
-        <div className="text-center animate-fade-in-up stagger-3">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-center"
+        >
           <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_20px_rgba(236,72,153,0.15)] overflow-hidden">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary-light to-primary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_24px_rgba(167,139,250,0.2)] overflow-hidden">
               {data.couplePhoto ? <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" /> : '👩'}
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 text-xs animate-wiggle" style={{ animationDelay: '0.5s' }}>💝</span>
+            <motion.span
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              className="absolute -bottom-0.5 -right-0.5 text-xs"
+            >💝</motion.span>
           </div>
           <div className="text-[11px] font-bold text-gray-500 mt-2">{data.names.you || '너'}</div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Quick Ping */}
-      <div className="glass-card mx-4 mb-3 p-4 animate-fade-in-up stagger-2">
-        <div className="flex items-center justify-between mb-2.5">
-          <div className="text-[11px] font-bold text-gray-500">💌 한줄 핑</div>
-          {pingSent && <span className="text-[11px] font-bold text-pink-400 animate-bounce-in">전송됨! 💕</span>}
+      {/* ── Quick Ping ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="glass-card mx-4 mb-3 p-4"
+      >
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-[11px] font-bold text-gray-500 flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-[10px]">💌</span>
+            한줄 핑
+          </div>
+          <AnimatePresence>
+            {pingSent && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5, x: 10 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="text-[11px] font-bold gradient-text"
+              >
+                {pingEmoji} 전송됨!
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
         <div className="flex gap-2 justify-center">
-          {QUICK_PINGS.map(emoji => (
-            <button key={emoji} onClick={() => sendPing(emoji)}
-              className="w-10 h-10 rounded-xl bg-pink-50 hover:bg-pink-100 flex items-center justify-center text-xl active:scale-90 transition border border-pink-100">
+          {QUICK_PINGS.map((emoji, i) => (
+            <motion.button
+              key={emoji}
+              onClick={() => sendPing(emoji)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.85, rotate: [0, -10, 10, 0] }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 + i * 0.04, type: 'spring', stiffness: 400 }}
+              className="w-10 h-10 rounded-xl bg-white/80 hover:bg-white flex items-center justify-center text-xl border border-white/50 shadow-[0_2px_12px_rgba(167,139,250,0.1)] backdrop-blur-sm"
+            >
               {emoji}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* 오늘의 질문 미리보기 */}
-      <div className="glass-card mx-4 mb-3 p-4 bg-gradient-to-br from-mint-bg/80 via-green-50/60 to-white border-teal/10 animate-fade-in-up stagger-3">
-        <div className="flex items-center justify-between mb-2">
-          <div className="text-[11px] font-bold text-teal">❓ 오늘의 질문</div>
-          {myAnswered && <span className="text-[10px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-bold">✓ 답변 완료</span>}
-        </div>
-        <div className="text-[15px] font-extrabold text-gray-800 leading-relaxed">
-          {todayQ.text}
-        </div>
-        {!myAnswered && (
-          <div className="text-[11px] text-pink-400 mt-2 font-semibold">
-            탭해서 답변하기 →
+      {/* ── Today's Question Preview ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="glass-card mx-4 mb-3 p-5 relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-secondary/10 to-transparent rounded-full -mr-6 -mt-6" />
+
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-secondary/20 to-primary/20 flex items-center justify-center text-[12px]">❓</span>
+              <span className="text-[11px] font-bold text-gray-500">오늘의 질문</span>
+            </div>
+            {myAnswered && (
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="text-[10px] bg-gradient-to-r from-primary/10 to-secondary/10 text-primary-dark px-2.5 py-0.5 rounded-full font-bold border border-primary/10"
+              >
+                ✓ 답변 완료
+              </motion.span>
+            )}
           </div>
-        )}
+          <div className="text-[15px] font-extrabold text-gray-800 leading-relaxed">
+            {todayQ.text}
+          </div>
+          {!myAnswered && (
+            <motion.div
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-[11px] gradient-text mt-2.5 font-bold"
+            >
+              탭해서 답변하기 →
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
+
+      {/* ── Quick Stats ── */}
+      <div className="grid grid-cols-3 gap-2.5 px-4 mb-4">
+        {[
+          { emoji: '📸', value: data.album.length, label: '추억', delay: 0.7 },
+          { emoji: '💬', value: data.chat.length, label: '대화', delay: 0.75 },
+          { emoji: '📍', value: (data.spots || []).length, label: '장소', delay: 0.8 },
+        ].map((stat, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: stat.delay }}
+            className="glass-card p-3 text-center"
+          >
+            <div className="text-lg mb-0.5">{stat.emoji}</div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: stat.delay + 0.2 }}
+              className="text-lg font-black gradient-text"
+            >
+              {stat.value}
+            </motion.div>
+            <div className="text-[9px] text-gray-400 font-bold">{stat.label}</div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-2 px-4 mb-4 animate-fade-in-up stagger-4">
-        <div className="glass-card p-2.5 text-center">
-          <div className="text-lg mb-0.5">📸</div>
-          <div className="text-base font-black text-gray-800">{data.album.length}</div>
-          <div className="text-[9px] text-pink-400 font-bold">추억</div>
-        </div>
-        <div className="glass-card p-2.5 text-center">
-          <div className="text-lg mb-0.5">💬</div>
-          <div className="text-base font-black text-gray-800">{data.chat.length}</div>
-          <div className="text-[9px] text-pink-400 font-bold">대화</div>
-        </div>
-        <div className="glass-card p-2.5 text-center">
-          <div className="text-lg mb-0.5">📍</div>
-          <div className="text-base font-black text-gray-800">{(data.spots || []).length}</div>
-          <div className="text-[9px] text-pink-400 font-bold">장소</div>
-        </div>
-      </div>
-
-      {/* Last Photo */}
+      {/* ── Last Photo ── */}
       {data.album.length > 0 && (
-        <div className="glass-card col-span-2 h-[150px] overflow-hidden mx-4 mb-4 animate-fade-in-up">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+          className="glass-card h-[150px] overflow-hidden mx-4 mb-4"
+        >
           <div className="relative w-full h-full">
             <img src={data.album[data.album.length - 1].src} alt="" className="w-full h-full object-cover rounded-[22px]" />
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-pink-900/40 to-transparent px-4 pt-6 pb-3 rounded-b-[22px]">
-              <span className="text-white text-xs font-bold flex items-center gap-1">🌸 {data.album.length}장의 추억</span>
+            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/40 to-transparent px-4 pt-8 pb-3 rounded-b-[22px]">
+              <span className="text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-sm bg-white/10 rounded-full px-3 py-1 w-fit">
+                🌸 {data.album.length}장의 추억
+              </span>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      <div className="h-20" />
+      <div className="h-4" />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus } from 'lucide-react'
 
@@ -39,36 +40,99 @@ export default function Album() {
   }
 
   return (
-    <div className="px-4 pb-24 animate-fade-in-up">
+    <div className="px-4 pb-24">
       {data.album.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <span className="text-5xl mb-4 animate-bounce">🖼️</span>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center py-20"
+        >
+          <motion.span
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-5xl mb-4"
+          >🖼️</motion.span>
           <h3 className="text-lg font-extrabold text-gray-800 mb-2">아직 사진이 없어요</h3>
           <p className="text-sm text-gray-400 mb-4">우리의 소중한 순간을 남겨보세요</p>
-          <button onClick={addPhoto} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">첫 사진 추가</button>
-        </div>
+          <motion.button
+            onClick={addPhoto}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm shadow-[0_8px_24px_rgba(236,72,153,0.25)] btn-glow"
+          >
+            첫 사진 추가
+          </motion.button>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-3 gap-1.5">
-          <div onClick={addPhoto} className="aspect-square rounded-2xl bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:bg-mint-bg transition gap-1">
+        <div className="grid grid-cols-3 gap-1.5 pt-3">
+          <motion.div
+            onClick={addPhoto}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
+            className="aspect-square rounded-2xl bg-white/60 backdrop-blur-sm border border-white/50 flex flex-col items-center justify-center cursor-pointer gap-1 shadow-[0_2px_12px_rgba(167,139,250,0.08)]"
+          >
             <Plus size={24} className="text-gray-400" />
             <span className="text-[10px] font-bold text-gray-400">추가</span>
-          </div>
+          </motion.div>
           {[...data.album].reverse().map((photo, i) => (
-            <div key={i} onClick={() => setViewIdx(data.album.length - 1 - i)} className="aspect-square rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition">
-              <img src={photo.src} alt="" className="w-full h-full object-cover" />
-            </div>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.03, type: 'spring' }}
+              onClick={() => setViewIdx(data.album.length - 1 - i)}
+              className="aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-[0_2px_12px_rgba(167,139,250,0.08)]"
+            >
+              <motion.img
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                src={photo.src}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
           ))}
         </div>
       )}
-      {viewIdx !== null && data.album[viewIdx] && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center" onClick={() => setViewIdx(null)}>
-          <img src={data.album[viewIdx].src} alt="" className="max-w-full max-h-[70vh] rounded-2xl" />
-          <div className="flex gap-4 mt-6">
-            <button onClick={(e) => { e.stopPropagation(); remove(viewIdx) }} className="px-6 py-3 rounded-xl bg-red-500/80 text-white font-bold text-sm">삭제</button>
-            <button onClick={() => setViewIdx(null)} className="px-6 py-3 rounded-xl bg-white/20 text-white font-bold text-sm">닫기</button>
-          </div>
-        </div>
-      )}
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {viewIdx !== null && data.album[viewIdx] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-center"
+            onClick={() => setViewIdx(null)}
+          >
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              src={data.album[viewIdx].src}
+              alt=""
+              className="max-w-full max-h-[70vh] rounded-2xl shadow-2xl"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex gap-4 mt-6"
+            >
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => { e.stopPropagation(); remove(viewIdx) }}
+                className="px-6 py-3 rounded-xl bg-red-500/80 text-white font-bold text-sm backdrop-blur-sm"
+              >삭제</motion.button>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setViewIdx(null)}
+                className="px-6 py-3 rounded-xl bg-white/20 text-white font-bold text-sm backdrop-blur-sm border border-white/20"
+              >닫기</motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
