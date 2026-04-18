@@ -1,18 +1,8 @@
-export type SpaceType = 'couple' | 'friends' | 'travel' | 'wedding' | 'project'
-
-export interface SpaceConfig {
-  type: SpaceType
-  name: string
-  emoji: string
-  members: string[]
-}
+// 커플 전용 (관계유형 시스템 제거, 하위호환 유지)
+export type SpaceType = 'couple'
 
 export const SPACE_PRESETS: Record<SpaceType, { label: string; emoji: string; desc: string; color: string }> = {
-  couple: { label: '커플', emoji: '💑', desc: '우리 둘만의 공간', color: '#E8837C' },
-  friends: { label: '친구모임', emoji: '👯', desc: '함께하는 추억 공간', color: '#38B2AC' },
-  travel: { label: '여행모임', emoji: '✈️', desc: '여행 계획과 기록', color: '#4299E1' },
-  wedding: { label: '결혼준비', emoji: '💒', desc: '우리의 결혼 준비', color: '#D69E2E' },
-  project: { label: '프로젝트', emoji: '🚀', desc: '함께 만드는 프로젝트', color: '#805AD5' },
+  couple: { label: '커플', emoji: '💑', desc: '우리 둘만의 공간', color: '#EC4899' },
 }
 
 export interface CoupleData {

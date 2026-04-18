@@ -1,4 +1,4 @@
-import { Heart, MessageSquare, Image, Calendar, MoreVertical } from 'lucide-react'
+import { Heart, MessageSquare, Image, MapPin, MoreVertical } from 'lucide-react'
 import type { TabGroup } from '../../config/spaceConfig'
 
 interface BottomTabItem {
@@ -17,7 +17,7 @@ const ICONS: Record<string, typeof Heart> = {
   heart: Heart,
   chat: MessageSquare,
   image: Image,
-  calendar: Calendar,
+  mappin: MapPin,
   more: MoreVertical,
 }
 
