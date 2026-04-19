@@ -30,6 +30,7 @@ export const APP_LAYOUT: AppLayout = {
     home: [
       { id: 'homedash', label: '✨ 홈' },
       { id: 'questions', label: '❓ 오늘의 질문' },
+      { id: 'timeline', label: '📜 타임라인' },
     ],
     chat: [],
     album: [
@@ -41,6 +42,7 @@ export const APP_LAYOUT: AppLayout = {
       { id: 'datemap', label: '📍 우리 지도' },
     ],
     more: [
+      { id: 'games', label: '🎮 게임' },
       { id: 'calendar', label: '📅 캘린더' },
       { id: 'wishlist', label: '🎁 위시' },
       { id: 'annivlist', label: '💝 기념일' },
