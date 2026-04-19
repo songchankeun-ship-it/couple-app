@@ -28,7 +28,9 @@ export default function Timeline() {
   // First chat
   if (data.chat.length > 0) {
     const firstChat = data.chat[0]
-    events.push({ date: firstChat.date, title: '첫 메시지', emoji: '💬', type: 'auto', detail: `"${firstChat.text.slice(0, 30)}${firstChat.text.length > 30 ? '...' : ''}"` })
+    if (firstChat?.date) {
+      events.push({ date: firstChat.date, title: '첫 메시지', emoji: '💬', type: 'auto', detail: `"${firstChat.text.slice(0, 30)}${firstChat.text.length > 30 ? '...' : ''}"` })
+    }
   }
 
   // First photo
@@ -38,7 +40,9 @@ export default function Timeline() {
 
   // Calendar events / anniversaries
   data.events?.forEach(ev => {
-    events.push({ date: ev.date, title: ev.title, emoji: '📅', type: 'auto' })
+    if (ev?.date && ev?.title) {
+      events.push({ date: ev.date, title: ev.title, emoji: '📅', type: 'auto' })
+    }
   })
 
   // Milestones from D-day
@@ -71,15 +75,18 @@ export default function Timeline() {
   // Custom timeline entries from data
   const customEntries = data.timelineEntries || []
   customEntries.forEach(e => {
-    events.push({ date: e.date, title: e.title, emoji: e.emoji, type: 'manual', detail: e.detail })
+    if (e?.date && e?.title) {
+      events.push({ date: e.date, title: e.title, emoji: e.emoji, type: 'manual', detail: e.detail })
+    }
   })
 
-  // Sort by date descending (newest first)
-  events.sort((a, b) => b.date.localeCompare(a.date))
+  // Filter out any events with missing dates, then sort descending
+  const validEvents = events.filter(e => e.date)
+  validEvents.sort((a, b) => b.date.localeCompare(a.date))
 
   // Group by year-month
   const grouped: Record<string, TimelineEvent[]> = {}
-  events.forEach(ev => {
+  validEvents.forEach(ev => {
     const ym = ev.date.slice(0, 7) // YYYY-MM
     if (!grouped[ym]) grouped[ym] = []
     grouped[ym].push(ev)
@@ -140,7 +147,7 @@ export default function Timeline() {
           📜
         </div>
         <div>
-          <div className="text-xl font-black gradient-text">{events.length}개의 순간</div>
+          <div className="text-xl font-black gradient-text">{validEvents.length}개의 순간</div>
           <div className="text-[11px] text-gray-400 font-semibold">
             {data.ddayDate ? `${data.ddayDate}부터 지금까지` : '우리의 이야기'}
           </div>
@@ -148,7 +155,7 @@ export default function Timeline() {
       </motion.div>
 
       {/* Timeline */}
-      {events.length === 0 ? (
+      {validEvents.length === 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
