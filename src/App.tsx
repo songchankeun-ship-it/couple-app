@@ -9,11 +9,13 @@ import SubNav from './components/layout/SubNav'
 // Core tabs
 import HomeDashboard from './components/home/HomeDashboard'
 import DailyQuestion from './components/chat/DailyQuestion'
+import Timeline from './components/home/Timeline'
 import Chat from './components/chat/Chat'
 import Album from './components/record/Album'
 import { Memories } from './components/record/RecordFeatures'
 import DateFeed from './components/date/DateFeed'
 import DateMap from './components/date/DateMap'
+import CoupleGames from './components/fun/CoupleGames'
 import CalendarView from './components/calendar/CalendarView'
 import { Wishlist } from './components/calendar/CalendarFeatures'
 import AnniversaryList from './components/home/AnniversaryList'
@@ -39,11 +41,13 @@ function Content({ tab }: { tab: string }) {
   switch (tab) {
     case 'homedash': return <HomeDashboard />
     case 'questions': return <DailyQuestion />
+    case 'timeline': return <Timeline />
     case 'chat': return <Chat />
     case 'album': return <Album />
     case 'memories': return <Memories />
     case 'datefeed': return <DateFeed />
     case 'datemap': return <DateMap />
+    case 'games': return <CoupleGames />
     case 'calendar': return <CalendarView />
     case 'wishlist': return <Wishlist />
     case 'annivlist': return <AnniversaryList />
