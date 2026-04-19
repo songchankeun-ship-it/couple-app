@@ -163,7 +163,6 @@ export default function HomeDashboard() {
           />
         ))}
 
-        <div className="absolute -bottom-px left-0 right-0 h-8 bg-bg rounded-t-[24px] z-20" />
       </motion.div>
 
       {/* ── Profile Section ── */}

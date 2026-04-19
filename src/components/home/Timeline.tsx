@@ -69,8 +69,10 @@ export default function Timeline() {
   }
 
   // Custom timeline entries from data
-  const customEntries: TimelineEvent[] = (data as any).timelineEntries || []
-  events.push(...customEntries.map(e => ({ ...e, type: 'manual' as const })))
+  const customEntries = data.timelineEntries || []
+  customEntries.forEach(e => {
+    events.push({ date: e.date, title: e.title, emoji: e.emoji, type: 'manual', detail: e.detail })
+  })
 
   // Sort by date descending (newest first)
   events.sort((a, b) => b.date.localeCompare(a.date))
@@ -87,14 +89,14 @@ export default function Timeline() {
     if (!form.title.trim() || !form.date) return
     updateData(prev => ({
       ...prev,
-      timelineEntries: [...((prev as any).timelineEntries || []), {
+      timelineEntries: [...(prev.timelineEntries || []), {
         title: form.title.trim(),
         date: form.date,
         emoji: form.emoji || '💕',
         detail: form.detail || '',
         type: 'manual',
       }]
-    } as any))
+    }))
     setForm({ title: '', date: '', emoji: '💕', detail: '' })
     setShowAdd(false)
   }

@@ -88,13 +88,13 @@ export default function CoupleGames() {
   const [oxAnswers, setOxAnswers] = useState<boolean[]>([])
   const [oxDone, setOxDone] = useState(false)
 
-  const gameHistory: GameResult[] = (data as any).gameHistory || []
+  const gameHistory: GameResult[] = data.gameHistory || []
 
   const saveResult = (result: GameResult) => {
     updateData(prev => ({
       ...prev,
-      gameHistory: [...((prev as any).gameHistory || []), result],
-    } as any))
+      gameHistory: [...(prev.gameHistory || []), result],
+    }))
   }
 
   const resetAll = () => {

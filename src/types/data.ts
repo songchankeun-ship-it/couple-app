@@ -40,6 +40,23 @@ export interface CoupleData {
   checklist?: ChecklistItem[]
   vendors?: VendorItem[]
   roles?: RoleItem[]
+  timelineEntries?: TimelineEntry[]
+  gameHistory?: GameResult[]
+}
+
+export interface TimelineEntry {
+  title: string
+  date: string
+  emoji: string
+  detail?: string
+  type: 'manual'
+}
+
+export interface GameResult {
+  type: string
+  date: string
+  score?: number
+  answers?: any
 }
 
 export interface TodoItem {
@@ -218,4 +235,6 @@ export const DEFAULT_DATA: CoupleData = {
   checklist: [],
   vendors: [],
   roles: [],
+  timelineEntries: [],
+  gameHistory: [],
 }

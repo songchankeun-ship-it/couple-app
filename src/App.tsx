@@ -65,7 +65,7 @@ export default function App() {
   // 온보딩
   if (!data.spaceType) {
     return (
-      <div className="max-w-[480px] mx-auto min-h-screen relative overflow-hidden">
+      <div className="max-w-[480px] mx-auto min-h-screen relative overflow-x-hidden">
         <CoupleOnboarding />
       </div>
     )
@@ -84,7 +84,7 @@ export default function App() {
   const currentSubs = layout.subTabs[mainTab] || []
 
   return (
-    <div className="max-w-[480px] mx-auto min-h-screen relative overflow-hidden">
+    <div className="max-w-[480px] mx-auto min-h-screen relative overflow-x-hidden">
       {/* Sub nav */}
       {currentSubs.length > 1 && (
         <motion.div
