@@ -29,8 +29,10 @@ export const APP_LAYOUT: AppLayout = {
   subTabs: {
     home: [
       { id: 'homedash', label: '✨ 홈' },
-      { id: 'questions', label: '❓ 오늘의 질문' },
+      { id: 'questions', label: '❓ 질문' },
       { id: 'timeline', label: '📜 타임라인' },
+      { id: 'todo', label: '✅ 할일' },
+      { id: 'savings', label: '💰 저축' },
     ],
     chat: [],
     album: [

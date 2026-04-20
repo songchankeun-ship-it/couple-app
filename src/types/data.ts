@@ -149,11 +149,20 @@ export interface MoodEntry {
   you?: number
 }
 
+export interface SavingsDeposit {
+  amount: number
+  from: string
+  date: string
+  note?: string
+}
+
 export interface SavingsItem {
   title: string
   target: number
   current: number
   date: string
+  emoji?: string
+  deposits?: SavingsDeposit[]
 }
 
 export interface Memory {

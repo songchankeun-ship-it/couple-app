@@ -10,6 +10,8 @@ import SubNav from './components/layout/SubNav'
 import HomeDashboard from './components/home/HomeDashboard'
 import DailyQuestion from './components/chat/DailyQuestion'
 import Timeline from './components/home/Timeline'
+import CoupleTodo from './components/home/CoupleTodo'
+import CoupleSavings from './components/home/CoupleSavings'
 import Chat from './components/chat/Chat'
 import Album from './components/record/Album'
 import { Memories } from './components/record/RecordFeatures'
@@ -42,6 +44,8 @@ function Content({ tab }: { tab: string }) {
     case 'homedash': return <HomeDashboard />
     case 'questions': return <DailyQuestion />
     case 'timeline': return <Timeline />
+    case 'todo': return <CoupleTodo />
+    case 'savings': return <CoupleSavings />
     case 'chat': return <Chat />
     case 'album': return <Album />
     case 'memories': return <Memories />
