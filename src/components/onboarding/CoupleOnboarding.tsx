@@ -16,7 +16,7 @@ export default function CoupleOnboarding() {
     updateData(prev => ({
       ...prev,
       spaceType: 'couple',
-      spaceName: '우리 둘',
+      spaceName: '격변의시대',
       names: { me: myName.trim(), you: partnerName.trim() || '상대' },
       ddayDate: ddayDate || null,
     }))
@@ -53,7 +53,7 @@ export default function CoupleOnboarding() {
               transition={{ delay: 0.3 }}
               className="text-3xl font-black gradient-text mb-2"
             >
-              서윤 & 찬근
+              격변의시대
             </motion.h1>
 
             <motion.p
