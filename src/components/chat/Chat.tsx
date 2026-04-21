@@ -161,7 +161,7 @@ export default function Chat() {
             onKeyDown={handleKey}
             placeholder="메시지를 입력하세요..."
             rows={1}
-            className="flex-1 resize-none outline-none text-[14px] py-2 max-h-24 bg-transparent"
+            className="flex-1 resize-none outline-none text-[14px] py-2.5 max-h-24 bg-transparent leading-relaxed"
           />
           <motion.button
             onClick={send}

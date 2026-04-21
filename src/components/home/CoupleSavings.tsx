@@ -178,7 +178,7 @@ export default function CoupleSavings() {
                       <div className="flex items-center gap-2">
                         <span className="text-[14px] font-bold text-gray-800">{goal.title}</span>
                         {isComplete && (
-                          <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">달성!</span>
+                          <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">달성!</span>
                         )}
                       </div>
                       <div className="flex items-baseline gap-1 mt-0.5">
@@ -204,23 +204,23 @@ export default function CoupleSavings() {
                     <motion.button
                       onClick={() => setShowDeposit(idx)}
                       whileTap={{ scale: 0.95 }}
-                      className="flex-1 py-2 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 text-primary text-xs font-bold"
+                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 text-primary text-[13px] font-bold"
                     >
                       + 입금하기
                     </motion.button>
                     <motion.button
                       onClick={() => setExpandedIdx(isExpanded ? null : idx)}
                       whileTap={{ scale: 0.95 }}
-                      className="px-3 py-2 rounded-xl bg-gray-50 text-gray-400 text-xs font-bold flex items-center gap-1"
+                      className="px-4 py-2.5 rounded-xl bg-gray-50 text-gray-400 text-[13px] font-bold flex items-center gap-1"
                     >
-                      기록 {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                      기록 {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </motion.button>
                     <motion.button
                       onClick={() => removeGoal(idx)}
                       whileTap={{ scale: 0.95 }}
-                      className="px-3 py-2 rounded-xl bg-gray-50 text-gray-300 text-xs"
+                      className="px-3 py-2.5 rounded-xl bg-gray-50 text-gray-300"
                     >
-                      <X size={14} />
+                      <X size={16} />
                     </motion.button>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function CoupleSavings() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-extrabold text-gray-800">💰 새 저축 목표</h3>
-                <button onClick={() => setShowAdd(false)} className="p-1 text-gray-400"><X size={20} /></button>
+                <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
               <div className="space-y-3">
                 <input
@@ -348,7 +348,7 @@ export default function CoupleSavings() {
                 <h3 className="text-base font-extrabold text-gray-800">
                   💵 {savings[showDeposit]?.title}에 입금
                 </h3>
-                <button onClick={() => setShowDeposit(null)} className="p-1 text-gray-400"><X size={20} /></button>
+                <button onClick={() => setShowDeposit(null)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
               <div className="space-y-3">
                 <input

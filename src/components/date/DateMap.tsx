@@ -173,9 +173,9 @@ export default function DateMap() {
                     <motion.button
                       onClick={() => removeSpot(realIdx)}
                       whileTap={{ scale: 0.85 }}
-                      className="p-1.5 text-gray-300 hover:text-red-400 transition shrink-0"
+                      className="p-2.5 -mr-1 text-gray-300 hover:text-red-400 transition shrink-0"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={16} />
                     </motion.button>
                   </div>
                 </motion.div>
@@ -205,7 +205,7 @@ export default function DateMap() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-extrabold text-gray-800">📍 새 장소 추가</h3>
-                <button onClick={() => setShowAdd(false)} className="p-1 text-gray-400 hover:text-gray-600"><X size={20} /></button>
+                <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
               <div className="space-y-3">

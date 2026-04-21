@@ -183,7 +183,7 @@ export default function HomeDashboard() {
               className="absolute -bottom-0.5 -right-0.5 text-xs"
             >💝</motion.span>
           </div>
-          <div className="text-[11px] font-bold text-gray-500 mt-2">{data.names.me || '나'}</div>
+          <div className="text-[12px] font-bold text-gray-500 mt-2">{data.names.me || '나'}</div>
         </motion.div>
 
         <motion.div
@@ -218,7 +218,7 @@ export default function HomeDashboard() {
               className="absolute -bottom-0.5 -right-0.5 text-xs"
             >💝</motion.span>
           </div>
-          <div className="text-[11px] font-bold text-gray-500 mt-2">{data.names.you || '너'}</div>
+          <div className="text-[12px] font-bold text-gray-500 mt-2">{data.names.you || '너'}</div>
         </motion.div>
       </div>
 
@@ -328,7 +328,7 @@ export default function HomeDashboard() {
             >
               {stat.value}
             </motion.div>
-            <div className="text-[9px] text-gray-400 font-bold">{stat.label}</div>
+            <div className="text-[10px] text-gray-400 font-bold">{stat.label}</div>
           </motion.div>
         ))}
       </div>

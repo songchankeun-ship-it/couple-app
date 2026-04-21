@@ -148,12 +148,12 @@ export default function CoupleTodo() {
                 <motion.button
                   onClick={() => toggleTodo(realIdx)}
                   whileTap={{ scale: 0.85 }}
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all
                     ${todo.done
                       ? 'bg-gradient-to-br from-primary to-secondary text-white'
                       : 'border-2 border-gray-200 text-transparent hover:border-primary/50'}`}
                 >
-                  <Check size={14} strokeWidth={3} />
+                  <Check size={16} strokeWidth={3} />
                 </motion.button>
 
                 {/* Content */}
@@ -173,9 +173,9 @@ export default function CoupleTodo() {
                 <motion.button
                   onClick={() => removeTodo(realIdx)}
                   whileTap={{ scale: 0.85 }}
-                  className="p-1 text-gray-300 hover:text-red-400 transition"
+                  className="p-2.5 -mr-1 text-gray-300 hover:text-red-400 transition"
                 >
-                  <X size={16} />
+                  <X size={18} />
                 </motion.button>
               </motion.div>
             )
@@ -203,7 +203,7 @@ export default function CoupleTodo() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-extrabold text-gray-800">✅ 할 일 추가</h3>
-                <button onClick={() => setShowAdd(false)} className="p-1 text-gray-400"><X size={20} /></button>
+                <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
               <div className="space-y-3">

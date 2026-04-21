@@ -51,13 +51,13 @@ export default function BottomNav({ tabs, active, onChange }: BottomNavProps) {
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               >
                 <Icon
-                  size={22}
+                  size={24}
                   strokeWidth={isActive ? 2.5 : 1.8}
                   className={`transition-colors duration-300 ${isActive ? 'text-primary' : 'text-gray-400'}`}
                 />
               </motion.div>
             </div>
-            <span className={`text-[9px] font-bold transition-colors duration-300 ${isActive ? 'gradient-text' : 'text-gray-400'}`}>
+            <span className={`text-[10px] font-bold transition-colors duration-300 ${isActive ? 'gradient-text' : 'text-gray-400'}`}>
               {label}
             </span>
             {isActive && (

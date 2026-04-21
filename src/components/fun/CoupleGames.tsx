@@ -257,8 +257,8 @@ export default function CoupleGames() {
   const BackBar = ({ title }: { title: string }) => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 py-3">
       <motion.button whileTap={{ scale: 0.9 }} onClick={resetAll}
-        className="w-9 h-9 rounded-xl glass-card-solid flex items-center justify-center">
-        <ArrowLeft size={18} className="text-gray-600" />
+        className="w-10 h-10 rounded-xl glass-card-solid flex items-center justify-center">
+        <ArrowLeft size={20} className="text-gray-600" />
       </motion.button>
       <span className="text-base font-black text-gray-800">{title}</span>
     </motion.div>

@@ -254,7 +254,7 @@ export default function Timeline() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-extrabold text-gray-800">📜 추억 추가</h3>
-                <button onClick={() => setShowAdd(false)} className="p-1 text-gray-400"><X size={20} /></button>
+                <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
               <div className="space-y-3">

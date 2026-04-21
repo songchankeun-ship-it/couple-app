@@ -30,6 +30,18 @@
 }
 
 /* ── Base ── */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--color-bg);
@@ -40,6 +52,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent iOS zoom on input focus (font-size < 16px triggers zoom) */
+input, textarea, select {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+/* Ensure all interactive elements have good touch targets */
+button, a, [role="button"] {
+  touch-action: manipulation;
 }
 
 /* ── Glass cards ── */
