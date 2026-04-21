@@ -27,16 +27,14 @@ import Settings from './components/more/Settings'
 import CoupleOnboarding from './components/onboarding/CoupleOnboarding'
 
 const pageVariants = {
-  initial: { opacity: 0, y: 12, scale: 0.98 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: -8, scale: 0.98 },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -4 },
 }
 
 const pageTransition = {
-  type: 'spring' as const,
-  stiffness: 300,
-  damping: 30,
-  mass: 0.8,
+  duration: 0.15,
+  ease: 'easeOut' as const,
 }
 
 function Content({ tab }: { tab: string }) {
