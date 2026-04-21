@@ -9,17 +9,18 @@ export default function CoupleTodo() {
   const [form, setForm] = useState({ title: '', assignee: '' })
   const [filter, setFilter] = useState<'all' | 'mine' | 'yours'>('all')
 
-  const todos = data.todos || []
+  const todos = (data.todos || []).filter(Boolean)
   const myName = data.names?.me || '나'
   const yourName = data.names?.you || '상대'
 
   const filtered = todos.filter(t => {
+    if (!t) return false
     if (filter === 'mine') return t.assignee === myName
     if (filter === 'yours') return t.assignee === yourName
     return true
   })
 
-  const doneCount = todos.filter(t => t.done).length
+  const doneCount = todos.filter(t => t?.done).length
   const totalCount = todos.length
   const progress = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
 
@@ -197,7 +198,7 @@ export default function CoupleTodo() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 border-t border-white/50"
+              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">

@@ -200,7 +200,7 @@ export default function DateMap() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 border-t border-white/50"
+              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">

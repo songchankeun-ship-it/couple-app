@@ -13,12 +13,12 @@ export default function CoupleSavings() {
   const [form, setForm] = useState({ title: '', target: '', emoji: '💰' })
   const [depositForm, setDepositForm] = useState({ amount: '', from: '', note: '' })
 
-  const savings = data.savings || []
+  const savings = (data.savings || []).filter(Boolean)
   const myName = data.names?.me || '나'
   const yourName = data.names?.you || '상대'
 
-  const totalSaved = savings.reduce((s, g) => s + (g.current || 0), 0)
-  const totalTarget = savings.reduce((s, g) => s + (g.target || 0), 0)
+  const totalSaved = savings.reduce((s, g) => s + (g?.current || 0), 0)
+  const totalTarget = savings.reduce((s, g) => s + (g?.target || 0), 0)
 
   const addGoal = () => {
     if (!form.title.trim() || !form.target) return
@@ -278,7 +278,7 @@ export default function CoupleSavings() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 border-t border-white/50"
+              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
@@ -341,7 +341,7 @@ export default function CoupleSavings() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 border-t border-white/50"
+              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
