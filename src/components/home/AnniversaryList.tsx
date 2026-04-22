@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 
 const SPECIAL_DAYS = [
@@ -29,10 +30,10 @@ const SPECIAL_DAYS = [
 ]
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
-  '기본': { bg: 'bg-teal-50', text: 'text-teal-800' },
-  '특별': { bg: 'bg-amber-50', text: 'text-amber-800' },
-  '센스': { bg: 'bg-purple-50', text: 'text-purple-800' },
-  '유니크': { bg: 'bg-rose-50', text: 'text-rose-800' },
+  '기본': { bg: 'bg-gray-50', text: 'text-gray-600' },
+  '특별': { bg: 'bg-gradient-to-r from-primary/10 to-secondary/10', text: 'text-primary' },
+  '센스': { bg: 'bg-purple-50', text: 'text-purple-700' },
+  '유니크': { bg: 'bg-rose-50', text: 'text-rose-700' },
 }
 
 export default function AnniversaryList() {
@@ -40,11 +41,15 @@ export default function AnniversaryList() {
 
   if (!data.ddayDate) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 animate-fade-in-up">
-        <span className="text-5xl mb-4">💝</span>
-        <h3 className="text-lg font-extrabold text-gray-800 mb-2">사귄 날짜를 먼저 설정해주세요</h3>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center py-16"
+      >
+        <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">💝</motion.span>
+        <h3 className="text-base font-extrabold text-gray-800 mb-1">사귄 날짜를 먼저 설정해주세요</h3>
         <p className="text-sm text-gray-400 text-center px-8">설정에서 D-day를 설정하면 기념일이 자동으로 계산돼요!</p>
-      </div>
+      </motion.div>
     )
   }
 
@@ -61,43 +66,74 @@ export default function AnniversaryList() {
     return { ...s, date, daysLeft }
   }).sort((a, b) => a.daysLeft - b.daysLeft)
 
-  return (
-    <div className="px-4 pb-24 animate-fade-in-up">
-      <div className="glass-card text-center p-5 mb-4">
-        <span className="text-sm text-gray-500">오늘은 만난 지</span>
-        <div className="text-4xl font-black text-teal-dark tracking-tight">{diffDays}일</div>
-      </div>
+  // Find the next upcoming milestone index
+  const nextIdx = milestones.findIndex(m => m.daysLeft >= 0)
 
+  return (
+    <div className="px-4 pb-24">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="py-3"
+      >
+        <h2 className="text-lg font-black text-gray-800">💝 기념일 모아보기</h2>
+        <p className="text-xs text-gray-400 mt-0.5">우리의 특별한 날들을 확인해요</p>
+      </motion.div>
+
+      {/* D-day card */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="glass-card text-center p-5 mb-4"
+      >
+        <div className="text-[12px] text-gray-400 font-semibold mb-1">오늘은 만난 지</div>
+        <div className="text-4xl font-black gradient-text tracking-tight">{diffDays}일</div>
+      </motion.div>
+
+      {/* Milestones */}
       <div className="space-y-2">
         {milestones.map((m, i) => {
           const dateStr = `${m.date.getFullYear()}.${String(m.date.getMonth() + 1).padStart(2, '0')}.${String(m.date.getDate()).padStart(2, '0')}`
           const isToday = m.daysLeft === 0
           const isPast = m.daysLeft < 0
+          const isNext = i === nextIdx && !isToday
           const tc = TAG_COLORS[m.tag] || TAG_COLORS['기본']
 
           return (
-            <div key={i}
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.03 }}
               className={`glass-card p-4 flex items-center gap-3 transition-all
-                ${isToday ? 'bg-gradient-to-r from-mint-bg to-green-50 border-teal/20 shadow-[0_4px_20px_rgba(56,178,172,0.12)]' : ''}
-                ${isPast ? 'opacity-50' : ''}
-                ${i % 2 === 0 ? 'border-l-[3px] border-l-mint' : 'border-l-[3px] border-l-lavender'}
-                `}
-              style={{ borderRadius: i % 2 === 0 ? '0 22px 22px 0' : '0 22px 22px 0' }}>
-              <span className="text-2xl">{m.emoji}</span>
+                ${isToday ? 'ring-2 ring-primary/30 shadow-[0_4px_20px_rgba(236,72,153,0.12)]' : ''}
+                ${isNext ? 'ring-1 ring-secondary/20' : ''}
+                ${isPast ? 'opacity-40' : ''}
+              `}
+            >
+              <motion.span
+                animate={isToday ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] } : {}}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-2xl"
+              >
+                {m.emoji}
+              </motion.span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[15px] font-extrabold text-gray-800">{m.name}</span>
+                  <span className="text-[14px] font-extrabold text-gray-800">{m.name}</span>
                   {m.tag !== '기본' && (
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${tc.bg} ${tc.text}`}>{m.tag}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${tc.bg} ${tc.text}`}>{m.tag}</span>
                   )}
                 </div>
                 {m.desc && <div className="text-[11px] text-gray-400 mt-0.5">{m.desc}</div>}
-                <div className="text-[11px] text-gray-400">{dateStr}</div>
+                <div className="text-[11px] text-gray-400 font-semibold">{dateStr}</div>
               </div>
-              <div className={`text-[13px] font-extrabold tracking-tight ${isToday ? 'text-teal' : isPast ? 'text-gray-400' : 'text-teal'}`}>
+              <div className={`text-[13px] font-extrabold tracking-tight shrink-0 ${isToday ? 'gradient-text' : isPast ? 'text-gray-400' : 'text-primary'}`}>
                 {isToday ? '🎉 오늘!' : isPast ? `${Math.abs(m.daysLeft)}일 전` : `D-${m.daysLeft}`}
               </div>
-            </div>
+            </motion.div>
           )
         })}
       </div>
