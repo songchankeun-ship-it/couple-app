@@ -1,13 +1,15 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
-import { Send } from 'lucide-react'
+import { Send, Trash2, X } from 'lucide-react'
 
 const IDENTITY_KEY = 'couple_chat_identity'
 
 export default function Chat() {
   const { data, updateData } = useFirebase()
   const [input, setInput] = useState('')
+  const [deleteIdx, setDeleteIdx] = useState<number | null>(null)
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const [identity, setIdentity] = useState<'me' | 'you' | null>(() => {
@@ -46,6 +48,27 @@ export default function Chat() {
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
+
+  const deleteMessage = useCallback((idx: number) => {
+    updateData(prev => ({
+      ...prev,
+      chat: prev.chat.filter((_, i) => i !== idx)
+    }))
+    setDeleteIdx(null)
+  }, [updateData])
+
+  const handleLongPressStart = useCallback((idx: number) => {
+    longPressTimer.current = setTimeout(() => {
+      setDeleteIdx(idx)
+    }, 500)
+  }, [])
+
+  const handleLongPressEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current)
+      longPressTimer.current = null
+    }
+  }, [])
 
   // Identity picker
   if (!identity) {
@@ -125,6 +148,11 @@ export default function Chat() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                onTouchStart={() => handleLongPressStart(i)}
+                onTouchEnd={handleLongPressEnd}
+                onMouseDown={() => handleLongPressStart(i)}
+                onMouseUp={handleLongPressEnd}
+                onMouseLeave={handleLongPressEnd}
               >
                 <div className="flex flex-col gap-0.5" style={{ maxWidth: '75%' }}>
                   {!isMe && (
@@ -132,7 +160,7 @@ export default function Chat() {
                       {msg.from || partnerName}
                     </span>
                   )}
-                  <div className={`px-4 py-2.5 text-[14px] leading-relaxed
+                  <div className={`px-4 py-2.5 text-[14px] leading-relaxed select-none
                     ${isMe
                       ? 'bg-gradient-to-br from-primary to-secondary text-white rounded-[20px_20px_6px_20px] shadow-[0_4px_16px_rgba(236,72,153,0.2)]'
                       : 'glass-card-solid text-gray-800 rounded-[20px_20px_20px_6px] !border-secondary/15'
@@ -173,6 +201,61 @@ export default function Chat() {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Delete confirmation */}
+      <AnimatePresence>
+        {deleteIdx !== null && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            onClick={() => setDeleteIdx(null)}
+          >
+            <motion.div
+              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-base font-extrabold text-gray-800">🗑️ 메시지 삭제</h3>
+                <button onClick={() => setDeleteIdx(null)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600">
+                  <X size={22} />
+                </button>
+              </div>
+
+              {/* Preview */}
+              <div className="glass-card p-4 mb-4">
+                <p className="text-[14px] text-gray-700 leading-relaxed line-clamp-3">
+                  {data.chat[deleteIdx]?.text}
+                </p>
+                <div className="text-[11px] text-gray-400 mt-1">
+                  {data.chat[deleteIdx]?.from} · {data.chat[deleteIdx]?.time}
+                </div>
+              </div>
+
+              <p className="text-[13px] text-gray-400 text-center mb-4">이 메시지를 삭제할까요?</p>
+
+              <div className="flex gap-3">
+                <motion.button
+                  onClick={() => setDeleteIdx(null)}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex-1 py-3.5 rounded-xl bg-gray-100 text-gray-600 font-extrabold text-[15px]"
+                >
+                  취소
+                </motion.button>
+                <motion.button
+                  onClick={() => deleteMessage(deleteIdx)}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-red-400 to-red-500 text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(239,68,68,0.25)] flex items-center justify-center gap-2"
+                >
+                  <Trash2 size={16} />
+                  삭제
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -80,7 +80,7 @@ export default function Album() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.03, type: 'spring' }}
               onClick={() => setViewIdx(data.album.length - 1 - i)}
-              className="aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-[0_2px_12px_rgba(167,139,250,0.08)]"
+              className="aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-[0_2px_12px_rgba(167,139,250,0.08)] relative group"
             >
               <motion.img
                 whileHover={{ scale: 1.05 }}
@@ -89,6 +89,13 @@ export default function Album() {
                 alt=""
                 className="w-full h-full object-cover"
               />
+              {photo.date && (
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent pt-4 pb-1.5 px-2">
+                  <span className="text-[9px] font-semibold text-white/90">
+                    {photo.date.slice(5).replace('-', '.')}
+                  </span>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
@@ -113,11 +120,23 @@ export default function Album() {
               alt=""
               className="max-w-full max-h-[70vh] rounded-2xl shadow-2xl"
             />
+            {data.album[viewIdx].date && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="mt-4 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10"
+              >
+                <span className="text-[13px] font-semibold text-white/80">
+                  📅 {data.album[viewIdx].date.replace(/-/g, '.')}
+                </span>
+              </motion.div>
+            )}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex gap-4 mt-6"
+              className="flex gap-4 mt-4"
             >
               <motion.button
                 whileTap={{ scale: 0.9 }}
