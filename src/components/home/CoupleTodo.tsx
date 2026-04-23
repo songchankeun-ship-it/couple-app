@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
-import { Plus, X, Check } from 'lucide-react'
+import { Plus, X, Check, Star, Calendar } from 'lucide-react'
 
 export default function CoupleTodo() {
   const { data, updateData } = useFirebase()
   const [showAdd, setShowAdd] = useState(false)
-  const [form, setForm] = useState({ title: '', assignee: '' })
+  const [form, setForm] = useState({ title: '', assignee: '', dueDate: '', priority: false })
   const [filter, setFilter] = useState<'all' | 'mine' | 'yours'>('all')
 
   const todos = (data.todos || []).filter(Boolean)
@@ -24,6 +24,8 @@ export default function CoupleTodo() {
   const totalCount = todos.length
   const progress = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
 
+  const todayStr = new Date().toISOString().split('T')[0]
+
   const addTodo = () => {
     if (!form.title.trim()) return
     updateData(prev => ({
@@ -31,11 +33,22 @@ export default function CoupleTodo() {
       todos: [...(prev.todos || []), {
         title: form.title.trim(),
         assignee: form.assignee || undefined,
+        dueDate: form.dueDate || undefined,
+        category: form.priority ? 'important' : undefined,
         done: false,
       }]
     }))
-    setForm({ title: '', assignee: '' })
+    setForm({ title: '', assignee: '', dueDate: '', priority: false })
     setShowAdd(false)
+  }
+
+  const togglePriority = (idx: number) => {
+    updateData(prev => ({
+      ...prev,
+      todos: (prev.todos || []).map((t, i) =>
+        i === idx ? { ...t, category: t.category === 'important' ? undefined : 'important' } : t
+      )
+    }))
   }
 
   const toggleTodo = (idx: number) => {
@@ -133,16 +146,31 @@ export default function CoupleTodo() {
         </motion.div>
       ) : (
         <div className="space-y-2">
-          {/* Undone first, then done */}
-          {[...filtered.filter(t => !t.done), ...filtered.filter(t => t.done)].map((todo, _i) => {
+          {/* Undone (priority first, overdue next) then done */}
+          {[
+            ...filtered.filter(t => !t.done).sort((a, b) => {
+              if ((a.category === 'important') !== (b.category === 'important')) return a.category === 'important' ? -1 : 1
+              if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate)
+              if (a.dueDate) return -1
+              if (b.dueDate) return 1
+              return 0
+            }),
+            ...filtered.filter(t => t.done),
+          ].map((todo, _i) => {
             const realIdx = todos.indexOf(todo)
+            const isOverdue = !todo.done && todo.dueDate && todo.dueDate < todayStr
+            const isDueToday = !todo.done && todo.dueDate === todayStr
+            const isPriority = todo.category === 'important'
             return (
               <motion.div
                 key={realIdx}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: _i * 0.03 }}
-                className={`glass-card p-4 flex items-center gap-3 ${todo.done ? 'opacity-50' : ''}`}
+                className={`glass-card p-4 flex items-center gap-3
+                  ${todo.done ? 'opacity-50' : ''}
+                  ${isOverdue ? 'ring-1 ring-red-200' : ''}
+                  ${isDueToday ? 'ring-1 ring-primary/20' : ''}`}
               >
                 {/* Checkbox */}
                 <motion.button
@@ -158,16 +186,36 @@ export default function CoupleTodo() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <span className={`text-[14px] font-bold ${todo.done ? 'line-through text-gray-400' : 'text-gray-800'}`}>
-                    {todo.title}
-                  </span>
-                  {todo.assignee && (
-                    <span className={`ml-2 text-[10px] px-2 py-0.5 rounded-full font-bold
-                      ${todo.assignee === myName ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'}`}>
-                      {todo.assignee}
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-[14px] font-bold ${todo.done ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                      {todo.title}
                     </span>
+                    {todo.assignee && (
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold
+                        ${todo.assignee === myName ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'}`}>
+                        {todo.assignee}
+                      </span>
+                    )}
+                  </div>
+                  {todo.dueDate && !todo.done && (
+                    <div className={`flex items-center gap-1 mt-1 text-[11px] font-semibold
+                      ${isOverdue ? 'text-red-500' : isDueToday ? 'text-primary' : 'text-gray-400'}`}>
+                      <Calendar size={11} />
+                      {isOverdue ? `마감 지남 (${todo.dueDate.slice(5).replace('-', '/')})` :
+                       isDueToday ? '오늘 마감!' :
+                       todo.dueDate.slice(5).replace('-', '/')}
+                    </div>
                   )}
                 </div>
+
+                {/* Priority star */}
+                <motion.button
+                  onClick={() => togglePriority(realIdx)}
+                  whileTap={{ scale: 0.85 }}
+                  className="p-1.5 shrink-0"
+                >
+                  <Star size={16} className={`transition ${isPriority ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
+                </motion.button>
 
                 {/* Delete */}
                 <motion.button
@@ -214,6 +262,30 @@ export default function CoupleTodo() {
                   autoFocus
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-primary outline-none text-sm bg-white/80"
                 />
+
+                {/* Due Date */}
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-2 block">마감일 (선택)</label>
+                  <input
+                    type="date"
+                    value={form.dueDate}
+                    onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-primary outline-none text-sm bg-white/80"
+                  />
+                </div>
+
+                {/* Priority */}
+                <motion.button
+                  onClick={() => setForm(f => ({ ...f, priority: !f.priority }))}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all
+                    ${form.priority
+                      ? 'bg-amber-50 border-2 border-amber-300 text-amber-700'
+                      : 'bg-gray-50 border-2 border-gray-100 text-gray-500'}`}
+                >
+                  <Star size={16} className={form.priority ? 'fill-amber-400 text-amber-400' : ''} />
+                  {form.priority ? '중요 표시됨' : '중요 표시'}
+                </motion.button>
 
                 {/* Assignee */}
                 <div>

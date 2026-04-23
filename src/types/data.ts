@@ -134,6 +134,7 @@ export interface SpotItem {
   category?: string
   rating?: number
   visited?: boolean
+  visitDate?: string
 }
 
 export interface Memo {

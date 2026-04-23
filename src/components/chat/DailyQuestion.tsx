@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
+import { ChevronDown } from 'lucide-react'
 
 const QUESTIONS = [
   // 일상 (Daily Life)
@@ -45,6 +46,7 @@ const CAT_EMOJI: Record<string, string> = {
 export default function DailyQuestion() {
   const { data, updateData } = useFirebase()
   const [answer, setAnswer] = useState('')
+  const [showHistory, setShowHistory] = useState(false)
 
   const today = new Date()
   const todayStr = today.toISOString().split('T')[0]
@@ -209,6 +211,72 @@ export default function DailyQuestion() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* History Section */}
+      {dates.length > 0 && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+          <motion.button
+            onClick={() => setShowHistory(!showHistory)}
+            whileTap={{ scale: 0.98 }}
+            className="w-full glass-card p-4 flex items-center justify-between mb-3"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg">📖</span>
+              <span className="text-sm font-bold text-gray-800">지난 답변 보기</span>
+              <span className="text-[11px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{dates.length}일</span>
+            </div>
+            <motion.div animate={{ rotate: showHistory ? 180 : 0 }}>
+              <ChevronDown size={18} className="text-gray-400" />
+            </motion.div>
+          </motion.button>
+
+          <AnimatePresence>
+            {showHistory && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden space-y-2"
+              >
+                {dates.filter(d => d !== todayStr).slice(0, 14).map((dateStr, i) => {
+                  const entry = data.questions.daily[dateStr]
+                  const dIdx = Math.floor((new Date(dateStr).getTime() - new Date(2024, 0, 1).getTime()) / 86400000)
+                  const q = QUESTIONS[dIdx % QUESTIONS.length]
+                  const [, m, d] = dateStr.split('-')
+                  return (
+                    <motion.div
+                      key={dateStr}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.03 }}
+                      className="glass-card p-4"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm">{q?.emoji || '❓'}</span>
+                        <span className="text-[13px] font-extrabold text-gray-800 flex-1">{q?.text || '질문'}</span>
+                        <span className="text-[10px] text-gray-400 font-semibold shrink-0">{m}.{d}</span>
+                      </div>
+                      {entry?.me && (
+                        <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl px-3 py-2 text-[13px] text-gray-700 mb-1.5 border border-primary/10">
+                          <span className="text-[10px] font-bold text-primary mr-1">{data.names.me || '나'}</span> {entry.me}
+                        </div>
+                      )}
+                      {entry?.you && (
+                        <div className="bg-gradient-to-br from-secondary/5 to-primary/5 rounded-xl px-3 py-2 text-[13px] text-gray-700 border border-secondary/10">
+                          <span className="text-[10px] font-bold text-secondary mr-1">{data.names.you || '너'}</span> {entry.you}
+                        </div>
+                      )}
+                      {!entry?.me && !entry?.you && (
+                        <div className="text-[12px] text-gray-400 italic">답변 없음</div>
+                      )}
+                    </motion.div>
+                  )
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      )}
     </div>
   )
 }

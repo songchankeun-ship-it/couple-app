@@ -25,6 +25,7 @@ export default function DateMap() {
 
   const addSpot = () => {
     if (!form.name?.trim()) return
+    const todayStr = new Date().toISOString().split('T')[0]
     updateData(prev => ({
       ...prev,
       spots: [...(prev.spots || []), {
@@ -34,6 +35,7 @@ export default function DateMap() {
         category: form.category || '기타',
         rating: form.rating || 0,
         visited: form.visited || false,
+        visitDate: form.visited ? todayStr : undefined,
       }]
     }))
     setForm({ category: '맛집', rating: 0 })
@@ -41,9 +43,14 @@ export default function DateMap() {
   }
 
   const toggleVisited = (idx: number) => {
+    const todayStr = new Date().toISOString().split('T')[0]
     updateData(prev => ({
       ...prev,
-      spots: prev.spots.map((s, i) => i === idx ? { ...s, visited: !s.visited } : s)
+      spots: prev.spots.map((s, i) => i === idx ? {
+        ...s,
+        visited: !s.visited,
+        visitDate: !s.visited ? todayStr : undefined,
+      } : s)
     }))
   }
 
@@ -159,6 +166,11 @@ export default function DateMap() {
                           )}
                         </div>
                         {spot.address && <div className="text-[11px] text-gray-400 mt-0.5">{spot.address}</div>}
+                        {spot.visited && spot.visitDate && (
+                          <div className="text-[10px] text-gray-400 mt-0.5 font-semibold">
+                            📅 {spot.visitDate.replace(/-/g, '.')} 방문
+                          </div>
+                        )}
                         {(spot.rating || 0) > 0 && (
                           <div className="flex gap-0.5 mt-1">
                             {[1,2,3,4,5].map(s => (
