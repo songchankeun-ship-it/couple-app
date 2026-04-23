@@ -155,7 +155,7 @@ export default function DateFeed() {
             transition={{ delay: i * 0.04 }}
             className={`relative px-4 py-2 rounded-full text-[12px] font-bold whitespace-nowrap shrink-0 transition-all duration-300
               ${selectedCat === cat
-                ? 'text-white shadow-[0_4px_16px_rgba(236,72,153,0.25)]'
+                ? 'text-white shadow-[0_2px_8px_rgba(242,160,181,0.15)]'
                 : 'bg-white/70 text-gray-500 border border-white/50 backdrop-blur-sm'}`}
           >
             {selectedCat === cat && (
@@ -194,7 +194,7 @@ export default function DateFeed() {
                           animate={isExpanded ? { rotate: [0, -10, 10, 0] } : {}}
                           className="text-2xl"
                         >{course.emoji}</motion.span>
-                        <h3 className="text-[15px] font-extrabold text-gray-800">{course.title}</h3>
+                        <h3 className="text-[15px] font-bold text-gray-800">{course.title}</h3>
                       </div>
                       <p className="text-[13px] text-gray-500 leading-relaxed">{course.desc}</p>
                       <div className="flex gap-1.5 mt-2 flex-wrap">

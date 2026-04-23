@@ -74,7 +74,7 @@ export default function MoodTracker() {
       {/* History */}
       {data.moods.history.length > 0 && (
         <div>
-          <h4 className="text-[14px] font-extrabold text-gray-800 mb-3 px-1">📊 기분 기록</h4>
+          <h4 className="text-[14px] font-bold text-gray-800 mb-3 px-1">📊 기분 기록</h4>
           <div className="space-y-2">
             {[...data.moods.history].reverse().slice(0, 14).map((entry, i) => (
               <div key={i} className="glass-card p-3 flex items-center justify-between">

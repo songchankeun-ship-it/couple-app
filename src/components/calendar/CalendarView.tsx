@@ -100,7 +100,7 @@ export default function CalendarView() {
         <motion.button
           onClick={() => openAdd()}
           whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
         >
           <Plus size={20} />
         </motion.button>
@@ -121,7 +121,7 @@ export default function CalendarView() {
           >
             <ChevronLeft size={18} className="text-gray-500" />
           </motion.button>
-          <h2 className="text-[15px] font-extrabold text-gray-800">{year}년 {month + 1}월</h2>
+          <h2 className="text-[15px] font-bold text-gray-800">{year}년 {month + 1}월</h2>
           <motion.button
             onClick={() => changeMonth(1)}
             whileTap={{ scale: 0.9 }}
@@ -161,7 +161,7 @@ export default function CalendarView() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h3 className="text-[14px] font-extrabold text-gray-800 mb-3 px-1">📋 이번 달 일정</h3>
+          <h3 className="text-[14px] font-bold text-gray-800 mb-3 px-1">📋 이번 달 일정</h3>
           <div className="space-y-2">
             {monthEvents.map((ev, idx) => {
               const realIdx = events.indexOf(ev)
@@ -200,7 +200,7 @@ export default function CalendarView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => setModal(null)}
           >
             <motion.div
@@ -208,11 +208,11 @@ export default function CalendarView() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">
+                <h3 className="text-base font-bold text-gray-800">
                   {modal.type === 'edit' ? '✏️ 일정 수정' : '📅 일정 추가'}
                 </h3>
                 <button onClick={() => setModal(null)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
@@ -252,7 +252,7 @@ export default function CalendarView() {
                   onClick={save}
                   disabled={!form.title.trim() || !form.date}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
                 >
                   저장하기
                 </motion.button>

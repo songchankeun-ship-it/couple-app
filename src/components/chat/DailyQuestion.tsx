@@ -167,7 +167,7 @@ export default function DailyQuestion() {
                 onClick={submitAnswer}
                 disabled={!answer.trim()}
                 whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
               >
                 답변하기
               </motion.button>
@@ -253,7 +253,7 @@ export default function DailyQuestion() {
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm">{q?.emoji || '❓'}</span>
-                        <span className="text-[13px] font-extrabold text-gray-800 flex-1">{q?.text || '질문'}</span>
+                        <span className="text-[13px] font-bold text-gray-800 flex-1">{q?.text || '질문'}</span>
                         <span className="text-[10px] text-gray-400 font-semibold shrink-0">{m}.{d}</span>
                       </div>
                       {entry?.me && (

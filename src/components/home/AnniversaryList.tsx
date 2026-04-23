@@ -47,7 +47,7 @@ export default function AnniversaryList() {
         className="flex flex-col items-center justify-center py-16"
       >
         <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">💝</motion.span>
-        <h3 className="text-base font-extrabold text-gray-800 mb-1">사귄 날짜를 먼저 설정해주세요</h3>
+        <h3 className="text-base font-bold text-gray-800 mb-1">사귄 날짜를 먼저 설정해주세요</h3>
         <p className="text-sm text-gray-400 text-center px-8">설정에서 D-day를 설정하면 기념일이 자동으로 계산돼요!</p>
       </motion.div>
     )
@@ -108,7 +108,7 @@ export default function AnniversaryList() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.03 }}
               className={`glass-card p-4 flex items-center gap-3 transition-all
-                ${isToday ? 'ring-2 ring-primary/30 shadow-[0_4px_20px_rgba(236,72,153,0.12)]' : ''}
+                ${isToday ? 'ring-2 ring-primary/30 shadow-[0_2px_8px_rgba(242,160,181,0.1)]' : ''}
                 ${isNext ? 'ring-1 ring-secondary/20' : ''}
                 ${isPast ? 'opacity-40' : ''}
               `}
@@ -122,7 +122,7 @@ export default function AnniversaryList() {
               </motion.span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[14px] font-extrabold text-gray-800">{m.name}</span>
+                  <span className="text-[14px] font-bold text-gray-800">{m.name}</span>
                   {m.tag !== '기본' && (
                     <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${tc.bg} ${tc.text}`}>{m.tag}</span>
                   )}
@@ -130,7 +130,7 @@ export default function AnniversaryList() {
                 {m.desc && <div className="text-[11px] text-gray-400 mt-0.5">{m.desc}</div>}
                 <div className="text-[11px] text-gray-400 font-semibold">{dateStr}</div>
               </div>
-              <div className={`text-[13px] font-extrabold tracking-tight shrink-0 ${isToday ? 'gradient-text' : isPast ? 'text-gray-400' : 'text-primary'}`}>
+              <div className={`text-[13px] font-bold tracking-tight shrink-0 ${isToday ? 'gradient-text' : isPast ? 'text-gray-400' : 'text-primary'}`}>
                 {isToday ? '🎉 오늘!' : isPast ? `${Math.abs(m.daysLeft)}일 전` : `D-${m.daysLeft}`}
               </div>
             </motion.div>

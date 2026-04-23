@@ -82,7 +82,7 @@ export default function Chat() {
           className="text-5xl"
         >💬</motion.span>
         <div className="text-center">
-          <h2 className="text-lg font-extrabold text-gray-700 mb-1">누구로 채팅할까요?</h2>
+          <h2 className="text-lg font-bold text-gray-700 mb-1">누구로 채팅할까요?</h2>
           <p className="text-xs text-gray-400">이 기기에서 사용할 이름을 선택하세요</p>
         </div>
         <div className="flex gap-4 w-full max-w-xs">
@@ -90,7 +90,7 @@ export default function Chat() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => pickIdentity('me')}
-            className="flex-1 py-4 rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-white font-bold text-base shadow-[0_8px_24px_rgba(236,72,153,0.3)] btn-glow"
+            className="flex-1 py-4 rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-white font-bold text-base shadow-[0_2px_8px_rgba(242,160,181,0.2)] btn-glow"
           >
             {name1}
           </motion.button>
@@ -98,7 +98,7 @@ export default function Chat() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => pickIdentity('you')}
-            className="flex-1 py-4 rounded-2xl bg-gradient-to-br from-secondary to-purple-600 text-white font-bold text-base shadow-[0_8px_24px_rgba(167,139,250,0.3)] btn-glow"
+            className="flex-1 py-4 rounded-2xl bg-gradient-to-br from-secondary to-purple-600 text-white font-bold text-base shadow-[0_2px_8px_rgba(209,189,255,0.2)] btn-glow"
           >
             {name2}
           </motion.button>
@@ -162,7 +162,7 @@ export default function Chat() {
                   )}
                   <div className={`px-4 py-2.5 text-[14px] leading-relaxed select-none
                     ${isMe
-                      ? 'bg-gradient-to-br from-primary to-secondary text-white rounded-[20px_20px_6px_20px] shadow-[0_4px_16px_rgba(236,72,153,0.2)]'
+                      ? 'bg-gradient-to-br from-primary to-secondary text-white rounded-[20px_20px_6px_20px] shadow-[0_2px_8px_rgba(242,160,181,0.15)]'
                       : 'glass-card-solid text-gray-800 rounded-[20px_20px_20px_6px] !border-secondary/15'
                     }`}>
                     <p>{msg.text}</p>
@@ -195,7 +195,7 @@ export default function Chat() {
             onClick={send}
             disabled={!input.trim()}
             whileTap={{ scale: 0.9 }}
-            className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shrink-0 disabled:opacity-30 shadow-[0_4px_12px_rgba(236,72,153,0.25)]"
+            className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shrink-0 disabled:opacity-30 shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
           >
             <Send size={18} />
           </motion.button>
@@ -207,17 +207,17 @@ export default function Chat() {
         {deleteIdx !== null && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => setDeleteIdx(null)}
           >
             <motion.div
               initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">🗑️ 메시지 삭제</h3>
+                <h3 className="text-base font-bold text-gray-800">🗑️ 메시지 삭제</h3>
                 <button onClick={() => setDeleteIdx(null)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600">
                   <X size={22} />
                 </button>
@@ -239,14 +239,14 @@ export default function Chat() {
                 <motion.button
                   onClick={() => setDeleteIdx(null)}
                   whileTap={{ scale: 0.97 }}
-                  className="flex-1 py-3.5 rounded-xl bg-gray-100 text-gray-600 font-extrabold text-[15px]"
+                  className="flex-1 py-3.5 rounded-xl bg-gray-100 text-gray-600 font-bold text-[15px]"
                 >
                   취소
                 </motion.button>
                 <motion.button
                   onClick={() => deleteMessage(deleteIdx)}
                   whileTap={{ scale: 0.97 }}
-                  className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-red-400 to-red-500 text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(239,68,68,0.25)] flex items-center justify-center gap-2"
+                  className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-red-400 to-red-500 text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(252,165,165,0.2)] flex items-center justify-center gap-2"
                 >
                   <Trash2 size={16} />
                   삭제

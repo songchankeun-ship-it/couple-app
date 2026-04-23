@@ -101,7 +101,7 @@ export function Roulette() {
         <div className={`text-3xl font-black mb-6 min-h-[48px] ${spinning ? 'animate-pulse' : ''}`}>
           {result || '뭐 먹을까?'}
         </div>
-        <button onClick={spin} disabled={spinning} className="px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-extrabold text-lg shadow-lg active:scale-95 disabled:opacity-50 transition">
+        <button onClick={spin} disabled={spinning} className="px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-lg shadow-lg active:scale-95 disabled:opacity-50 transition">
           {spinning ? '돌리는 중...' : '룰렛 돌리기!'}
         </button>
       </div>
@@ -143,7 +143,7 @@ export function Garden() {
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{lv.emoji}</span>
             <div className="flex-1">
-              <div className="text-sm font-extrabold text-gray-800">Lv.{level + 1} {lv.name}</div>
+              <div className="text-sm font-bold text-gray-800">Lv.{level + 1} {lv.name}</div>
               <div className="text-xs text-gray-400">펫: {lv.pet}</div>
             </div>
             <div className="text-right text-xs font-bold text-teal">{xp} XP</div>

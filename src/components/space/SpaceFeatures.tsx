@@ -62,7 +62,7 @@ export function Todos() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">📋 할 일 추가</h3>
@@ -146,7 +146,7 @@ export function Polls() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🗳️ 투표 만들기</h3>
@@ -210,7 +210,7 @@ export function Budget() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">💰 지출 추가</h3>
@@ -326,7 +326,7 @@ export function Vendors() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🏢 업체 등록</h3>
@@ -386,7 +386,7 @@ export function Roles() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">👥 역할 추가</h3>

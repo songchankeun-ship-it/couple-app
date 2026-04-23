@@ -52,12 +52,12 @@ export default function Album() {
             transition={{ duration: 3, repeat: Infinity }}
             className="text-5xl mb-4"
           >🖼️</motion.span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">아직 사진이 없어요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">아직 사진이 없어요</h3>
           <p className="text-sm text-gray-400 mb-4">우리의 소중한 순간을 남겨보세요</p>
           <motion.button
             onClick={addPhoto}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm shadow-[0_8px_24px_rgba(236,72,153,0.25)] btn-glow"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm shadow-[0_2px_8px_rgba(242,160,181,0.2)] btn-glow"
           >
             첫 사진 추가
           </motion.button>

@@ -27,7 +27,7 @@ export default function SubNav({ tabs, active, onChange }: SubNavProps) {
   return (
     <div
       ref={scrollRef}
-      className="flex gap-1.5 px-4 py-3 overflow-x-auto"
+      className="flex gap-1 px-4 py-2 overflow-x-auto"
       style={{
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
@@ -39,16 +39,20 @@ export default function SubNav({ tabs, active, onChange }: SubNavProps) {
           key={tab.id}
           data-active={active === tab.id}
           onClick={() => onChange(tab.id)}
-          className="relative px-3.5 py-2 rounded-full text-[13px] font-bold whitespace-nowrap shrink-0 transition-colors duration-200 min-h-[36px]"
+          className="relative px-4 py-2 rounded-xl text-[13px] whitespace-nowrap shrink-0 transition-colors duration-200 min-h-[36px]"
         >
           {active === tab.id && (
             <motion.div
               layoutId="sub-pill"
-              className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-secondary shadow-[0_4px_20px_rgba(236,72,153,0.25)]"
+              className="absolute inset-0 rounded-xl bg-primary-light/60 border border-primary/15"
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             />
           )}
-          <span className={`relative z-10 ${active === tab.id ? 'text-white' : 'text-gray-500'}`}>
+          <span className={`relative z-10 ${
+            active === tab.id
+              ? 'font-bold text-primary-dark'
+              : 'font-medium text-text-muted'
+          }`}>
             {tab.label}
           </span>
         </button>

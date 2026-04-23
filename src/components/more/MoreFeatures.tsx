@@ -24,7 +24,7 @@ export function Watchlist() {
       {data.watchlist.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">🎬</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">같이 볼 거 추가해요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">같이 볼 거 추가해요</h3>
           <button onClick={() => setModal(true)} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg mt-2">추가하기</button>
         </div>
       ) : (
@@ -44,7 +44,7 @@ export function Watchlist() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🎬 볼 거 추가</h3>

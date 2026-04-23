@@ -31,7 +31,7 @@ const QUESTIONS = [
   { cat: 'TMI', text: '이번 주말에 뭐 하고 싶어?', emoji: '🏖️' },
 ]
 
-export default function HomeDashboard() {
+export default function HomeDashboard({ onNavigate }: { onNavigate?: (tab: string) => void }) {
   const { data, updateData, connected, roomName } = useFirebase()
   const [pingSent, setPingSent] = useState(false)
   const [pingEmoji, setPingEmoji] = useState('')
@@ -174,7 +174,7 @@ export default function HomeDashboard() {
           className="text-center"
         >
           <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_24px_rgba(236,72,153,0.2)] overflow-hidden">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_2px_8px_rgba(242,160,181,0.15)] overflow-hidden">
               {data.couplePhoto ? <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" /> : '🧑'}
             </div>
             <motion.span
@@ -198,7 +198,7 @@ export default function HomeDashboard() {
             <div className="w-6 h-px bg-gradient-to-r from-primary-light to-transparent" />
           </div>
           {data.ddayDate && (
-            <span className="text-[10px] font-extrabold gradient-text">D+{diffDays}</span>
+            <span className="text-[10px] font-bold gradient-text">D+{diffDays}</span>
           )}
         </motion.div>
 
@@ -209,7 +209,7 @@ export default function HomeDashboard() {
           className="text-center"
         >
           <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary-light to-primary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_4px_24px_rgba(167,139,250,0.2)] overflow-hidden">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary-light to-primary-light flex items-center justify-center text-2xl border-[3px] border-white shadow-[0_2px_8px_rgba(209,189,255,0.15)] overflow-hidden">
               {data.couplePhoto ? <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" /> : '👩'}
             </div>
             <motion.span
@@ -270,7 +270,8 @@ export default function HomeDashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="glass-card mx-4 mb-3 p-5 relative overflow-hidden"
+        onClick={() => onNavigate?.('questions')}
+        className="glass-card mx-4 mb-3 p-5 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
       >
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-secondary/10 to-transparent rounded-full -mr-6 -mt-6" />
 
@@ -290,7 +291,7 @@ export default function HomeDashboard() {
               </motion.span>
             )}
           </div>
-          <div className="text-[15px] font-extrabold text-gray-800 leading-relaxed">
+          <div className="text-[15px] font-bold text-gray-800 leading-relaxed">
             {todayQ.text}
           </div>
           {!myAnswered && (

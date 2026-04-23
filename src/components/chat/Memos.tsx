@@ -26,7 +26,7 @@ export default function Memos() {
       {data.memos.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">💌</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">아직 편지가 없어요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">아직 편지가 없어요</h3>
           <p className="text-sm text-gray-400 mb-4">마음을 담은 편지를 써보세요</p>
           <button onClick={() => setModal(true)} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">첫 편지 쓰기</button>
         </div>
@@ -36,7 +36,7 @@ export default function Memos() {
             <div key={i} className="glass-card p-5 border-l-[3px] border-l-coral" style={{ borderRadius: '0 22px 22px 0' }}>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  {memo.title && <div className="text-[15px] font-extrabold text-gray-800 mb-1">{memo.title}</div>}
+                  {memo.title && <div className="text-[15px] font-bold text-gray-800 mb-1">{memo.title}</div>}
                   <div className="text-[14px] text-gray-600 leading-relaxed whitespace-pre-wrap">{memo.body || memo.text}</div>
                   <div className="text-[11px] text-gray-400 mt-2">{memo.date} · {memo.from === 'me' ? (data.names.me || '나') : (data.names.you || '너')}</div>
                 </div>
@@ -52,7 +52,7 @@ export default function Memos() {
         <Plus size={22} />
       </button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-xl" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">💌 편지 쓰기</h3>

@@ -237,7 +237,7 @@ export default function CoupleGames() {
                   {g.emoji}
                 </motion.div>
                 <div className="flex-1">
-                  <h3 className="text-[15px] font-extrabold text-gray-800">{g.title}</h3>
+                  <h3 className="text-[15px] font-bold text-gray-800">{g.title}</h3>
                   <p className="text-[12px] text-gray-500 mt-0.5">{g.desc}</p>
                 </div>
                 <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
@@ -292,7 +292,7 @@ export default function CoupleGames() {
         </div>
       </div>
       <motion.button whileTap={{ scale: 0.95 }} onClick={resetAll}
-        className="px-8 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold shadow-[0_8px_24px_rgba(236,72,153,0.25)]">
+        className="px-8 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold shadow-[0_2px_8px_rgba(242,160,181,0.2)]">
         돌아가기
       </motion.button>
     </motion.div>
@@ -333,7 +333,7 @@ export default function CoupleGames() {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleBalance(choice)}
-                    className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/10 text-[16px] font-extrabold text-gray-800 hover:border-primary/30 transition"
+                    className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/10 text-[16px] font-bold text-gray-800 hover:border-primary/30 transition"
                   >
                     {choice}
                   </motion.button>
@@ -369,17 +369,17 @@ export default function CoupleGames() {
 
             <div className="glass-card p-8 text-center mb-6">
               <span className="text-4xl mb-4 block">{q.icon}</span>
-              <div className="text-[16px] font-extrabold text-gray-800 mb-2 leading-relaxed">{q.q}</div>
+              <div className="text-[16px] font-bold text-gray-800 mb-2 leading-relaxed">{q.q}</div>
               <div className="text-[12px] text-gray-400 mb-6">
                 {compatTurn === 'me' ? (data.names.me || '나') : (data.names.you || '너')}, 어떻게 생각해?
               </div>
               <div className="flex gap-3">
                 <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleCompat(true)}
-                  className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 text-[18px] font-extrabold text-green-600 hover:border-green-400 transition">
+                  className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 text-[18px] font-bold text-green-600 hover:border-green-400 transition">
                   ⭕ 맞아
                 </motion.button>
                 <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleCompat(false)}
-                  className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-red-50 to-rose-50 border-2 border-red-200 text-[18px] font-extrabold text-red-500 hover:border-red-400 transition">
+                  className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-red-50 to-rose-50 border-2 border-red-200 text-[18px] font-bold text-red-500 hover:border-red-400 transition">
                   ❌ 아니야
                 </motion.button>
               </div>
@@ -412,7 +412,7 @@ export default function CoupleGames() {
 
             <div className="glass-card p-8 text-center mb-6">
               <span className="text-4xl mb-4 block">{q.emoji}</span>
-              <div className="text-[16px] font-extrabold text-gray-800 mb-6 leading-relaxed">{q.q}</div>
+              <div className="text-[16px] font-bold text-gray-800 mb-6 leading-relaxed">{q.q}</div>
               <div className="flex gap-3">
                 <motion.button whileTap={{ scale: 0.95 }} onClick={() => handleOx(true)}
                   className="flex-1 py-5 rounded-2xl bg-gradient-to-br from-blue-50 to-sky-50 border-2 border-blue-200 text-[20px] font-black text-blue-600 hover:border-blue-400 transition">

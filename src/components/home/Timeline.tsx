@@ -130,7 +130,7 @@ export default function Timeline() {
         <motion.button
           onClick={() => setShowAdd(true)}
           whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
         >
           <Plus size={20} />
         </motion.button>
@@ -162,7 +162,7 @@ export default function Timeline() {
           className="flex flex-col items-center justify-center py-16"
         >
           <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">📜</motion.span>
-          <h3 className="text-base font-extrabold text-gray-800 mb-1">아직 타임라인이 비어있어요</h3>
+          <h3 className="text-base font-bold text-gray-800 mb-1">아직 타임라인이 비어있어요</h3>
           <p className="text-sm text-gray-400">사귄 날짜를 설정하거나 추억을 추가해보세요!</p>
         </motion.div>
       ) : (
@@ -179,10 +179,10 @@ export default function Timeline() {
                 transition={{ delay: gi * 0.08 }}
                 className="flex items-center gap-3 mb-3"
               >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-[10px] font-black shadow-[0_4px_12px_rgba(236,72,153,0.25)] z-10">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-[10px] font-black shadow-[0_2px_8px_rgba(242,160,181,0.15)] z-10">
                   {parseInt(ym.split('-')[1])}월
                 </div>
-                <span className="text-[13px] font-extrabold text-gray-600">{formatMonth(ym)}</span>
+                <span className="text-[13px] font-bold text-gray-600">{formatMonth(ym)}</span>
               </motion.div>
 
               {/* Events in this month */}
@@ -241,7 +241,7 @@ export default function Timeline() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => setShowAdd(false)}
           >
             <motion.div
@@ -249,11 +249,11 @@ export default function Timeline() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">📜 추억 추가</h3>
+                <h3 className="text-base font-bold text-gray-800">📜 추억 추가</h3>
                 <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
@@ -298,7 +298,7 @@ export default function Timeline() {
                   onClick={addEntry}
                   disabled={!form.title.trim() || !form.date}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
                 >
                   추가하기
                 </motion.button>

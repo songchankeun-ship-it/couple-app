@@ -183,17 +183,17 @@ export default function CoupleStats() {
         {totalChats > 0 && (
           <div className="flex gap-3 mt-3 pt-3 border-t border-gray-100/50">
             <div className="flex-1 text-center">
-              <div className="text-[13px] font-extrabold text-primary">{myChats}</div>
+              <div className="text-[13px] font-bold text-primary">{myChats}</div>
               <div className="text-[10px] text-gray-400 font-semibold">{myName}</div>
             </div>
             <div className="w-px bg-gray-100" />
             <div className="flex-1 text-center">
-              <div className="text-[13px] font-extrabold text-secondary">{yourChats}</div>
+              <div className="text-[13px] font-bold text-secondary">{yourChats}</div>
               <div className="text-[10px] text-gray-400 font-semibold">{yourName}</div>
             </div>
             <div className="w-px bg-gray-100" />
             <div className="flex-1 text-center">
-              <div className="text-[13px] font-extrabold text-gray-700">
+              <div className="text-[13px] font-bold text-gray-700">
                 {totalChats > 0 ? Math.round((myChats / totalChats) * 100) : 0}:{totalChats > 0 ? Math.round((yourChats / totalChats) * 100) : 0}
               </div>
               <div className="text-[10px] text-gray-400 font-semibold">비율</div>
@@ -273,7 +273,7 @@ export default function CoupleStats() {
                 <div key={i} className="flex items-center gap-2 text-[12px]">
                   <span>{g.emoji || '💰'}</span>
                   <span className="font-bold text-gray-700 flex-1 truncate">{g.title}</span>
-                  <span className={`font-extrabold ${pct >= 100 ? 'text-green-500' : 'text-primary'}`}>{pct}%</span>
+                  <span className={`font-bold ${pct >= 100 ? 'text-green-500' : 'text-primary'}`}>{pct}%</span>
                 </div>
               )
             })}
@@ -300,7 +300,7 @@ export default function CoupleStats() {
             <div key={i} className="flex items-center gap-3">
               <span className="text-lg">{item.emoji}</span>
               <span className="flex-1 text-[13px] font-semibold text-gray-600">{item.label}</span>
-              <span className="text-[13px] font-extrabold text-gray-800">{item.value}</span>
+              <span className="text-[13px] font-bold text-gray-800">{item.value}</span>
             </div>
           ))}
         </div>

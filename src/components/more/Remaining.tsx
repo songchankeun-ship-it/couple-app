@@ -20,7 +20,7 @@ export function Memories() {
       {data.memories.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">📸</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">아직 추억이 없어요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">아직 추억이 없어요</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">첫 추억 기록</button>
         </div>
       ) : (
@@ -29,7 +29,7 @@ export function Memories() {
             <div key={i} className="glass-card p-4 border-l-[3px] border-l-coral" style={{ borderRadius: '0 22px 22px 0' }}>
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="text-[15px] font-extrabold text-gray-800">{m.title}</div>
+                  <div className="text-[15px] font-bold text-gray-800">{m.title}</div>
                   {m.desc && <div className="text-[13px] text-gray-500 mt-1">{m.desc}</div>}
                   <div className="text-[11px] text-gray-400 mt-1">{m.date}</div>
                 </div>
@@ -41,7 +41,7 @@ export function Memories() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">📸 추억 기록</h3>
@@ -78,7 +78,7 @@ export function Timecapsules() {
       {data.timecapsules.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">📬</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">타임캡슐</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">타임캡슐</h3>
           <p className="text-sm text-gray-400 mb-4">미래의 우리에게 편지를 보내요</p>
           <button onClick={() => setModal(true)} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">캡슐 만들기</button>
         </div>
@@ -112,7 +112,7 @@ export function Timecapsules() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">📬 타임캡슐 만들기</h3>
@@ -147,7 +147,7 @@ export function Birthdays() {
       {data.birthdays.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">🎂</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">등록된 생일이 없어요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">등록된 생일이 없어요</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">생일 등록</button>
         </div>
       ) : (
@@ -165,7 +165,7 @@ export function Birthdays() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🎂 생일 등록</h3>
@@ -201,7 +201,7 @@ export function Wishlist() {
       {data.wishes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">🎁</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">위시리스트가 비어있어요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">위시리스트가 비어있어요</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">추가하기</button>
         </div>
       ) : (
@@ -219,7 +219,7 @@ export function Wishlist() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🎁 위시 추가</h3>
@@ -254,7 +254,7 @@ export function DateSpots() {
       {data.spots.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">📍</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">가고 싶은 곳을 저장해요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">가고 싶은 곳을 저장해요</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">장소 추가</button>
         </div>
       ) : (
@@ -273,7 +273,7 @@ export function DateSpots() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">📍 장소 추가</h3>
@@ -311,7 +311,7 @@ export function Savings() {
       {data.savings.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">💰</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">함께 저축 목표를 세워요</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">함께 저축 목표를 세워요</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">목표 만들기</button>
         </div>
       ) : (
@@ -321,7 +321,7 @@ export function Savings() {
             return (
               <div key={i} className="glass-card p-5">
                 <div className="flex justify-between items-center mb-2">
-                  <div className="text-sm font-extrabold text-gray-800">{s.title}</div>
+                  <div className="text-sm font-bold text-gray-800">{s.title}</div>
                   <div className="text-xs font-bold text-teal">{pct}%</div>
                 </div>
                 <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden mb-2">
@@ -343,7 +343,7 @@ export function Savings() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">💰 저축 목표</h3>
@@ -378,7 +378,7 @@ export function WatchlistView() {
       {data.watchlist.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="text-5xl mb-4 animate-bounce">🎬</span>
-          <h3 className="text-lg font-extrabold text-gray-800 mb-2">같이 볼 콘텐츠</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">같이 볼 콘텐츠</h3>
           <button onClick={() => setModal(true)} className="mt-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">추가하기</button>
         </div>
       ) : (
@@ -397,7 +397,7 @@ export function WatchlistView() {
       )}
       <button onClick={() => setModal(true)} className="fixed bottom-20 right-[calc(50%-220px)] w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-light to-teal-dark text-white shadow-lg flex items-center justify-center active:scale-90 transition z-40"><Plus size={22} /></button>
       {modal && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
+        <div className="fixed inset-0 bg-black/20 z-50 flex items-end justify-center" onClick={() => setModal(false)}>
           <div className="bg-white rounded-t-[28px] w-full max-w-[480px] p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]" onClick={e => e.stopPropagation()}>
             <div className="w-9 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
             <h3 className="text-lg font-black text-center mb-5">🎬 볼거리 추가</h3>

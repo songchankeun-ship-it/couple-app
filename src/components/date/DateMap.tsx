@@ -77,7 +77,7 @@ export default function DateMap() {
           onClick={() => setShowAdd(true)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
         >
           <Plus size={20} />
         </motion.button>
@@ -110,7 +110,7 @@ export default function DateMap() {
           <button key={cat} onClick={() => setSelectedCat(cat)}
             className={`relative px-3.5 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap border-[1.5px] transition-all shrink-0
               ${selectedCat === cat
-                ? 'bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_4px_12px_rgba(236,72,153,0.2)]'
+                ? 'bg-gradient-to-r from-primary to-secondary text-white border-transparent shadow-[0_2px_8px_rgba(242,160,181,0.15)]'
                 : 'bg-white/70 text-gray-500 border-white/50 backdrop-blur-sm'}`}>
             {cat !== '전체' && <span className="mr-1">{SPOT_EMOJIS[cat]}</span>}{cat}
           </button>
@@ -129,7 +129,7 @@ export default function DateMap() {
             transition={{ duration: 3, repeat: Infinity }}
             className="text-5xl mb-4"
           >📍</motion.span>
-          <h3 className="text-base font-extrabold text-gray-800 mb-1">아직 장소가 없어요</h3>
+          <h3 className="text-base font-bold text-gray-800 mb-1">아직 장소가 없어요</h3>
           <p className="text-sm text-gray-400">함께 다녀온 곳을 기록해보세요!</p>
         </motion.div>
       ) : (
@@ -204,7 +204,7 @@ export default function DateMap() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => setShowAdd(false)}
           >
             <motion.div
@@ -212,11 +212,11 @@ export default function DateMap() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">📍 새 장소 추가</h3>
+                <h3 className="text-base font-bold text-gray-800">📍 새 장소 추가</h3>
                 <button onClick={() => setShowAdd(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
@@ -265,7 +265,7 @@ export default function DateMap() {
                   onClick={addSpot}
                   disabled={!form.name?.trim()}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
                 >
                   추가하기
                 </motion.button>

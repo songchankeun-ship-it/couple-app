@@ -146,7 +146,7 @@ export default function Settings() {
           <motion.div
             whileTap={{ scale: 0.95 }}
             onClick={() => photoRef.current?.click()}
-            className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center mx-auto cursor-pointer overflow-hidden border-4 border-white shadow-[0_8px_24px_rgba(236,72,153,0.15)]"
+            className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-light to-secondary-light flex items-center justify-center mx-auto cursor-pointer overflow-hidden border-4 border-white shadow-[0_2px_8px_rgba(242,160,181,0.1)]"
           >
             {data.couplePhoto ? (
               <img src={data.couplePhoto} alt="" className="w-full h-full object-cover" />

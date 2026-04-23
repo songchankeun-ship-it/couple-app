@@ -74,7 +74,7 @@ export function Memories() {
         <motion.button
           onClick={() => setModal(true)}
           whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
         >
           <Plus size={20} />
         </motion.button>
@@ -106,7 +106,7 @@ export function Memories() {
           className="flex flex-col items-center justify-center py-16"
         >
           <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">📸</motion.span>
-          <h3 className="text-base font-extrabold text-gray-800 mb-1">아직 추억이 없어요</h3>
+          <h3 className="text-base font-bold text-gray-800 mb-1">아직 추억이 없어요</h3>
           <p className="text-sm text-gray-400">소중한 순간을 기록해보세요</p>
         </motion.div>
       ) : (
@@ -210,7 +210,7 @@ export function Memories() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => { setModal(false); setFormPhotos([]) }}
           >
             <motion.div
@@ -218,11 +218,11 @@ export function Memories() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">📸 추억 기록</h3>
+                <h3 className="text-base font-bold text-gray-800">📸 추억 기록</h3>
                 <button onClick={() => setModal(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
@@ -278,7 +278,7 @@ export function Memories() {
                   onClick={save}
                   disabled={!form.title.trim()}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
                 >
                   저장하기
                 </motion.button>
@@ -332,7 +332,7 @@ export function Timecapsules() {
         <motion.button
           onClick={() => setModal(true)}
           whileTap={{ scale: 0.9 }}
-          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
         >
           <Plus size={20} />
         </motion.button>
@@ -346,7 +346,7 @@ export function Timecapsules() {
           className="flex flex-col items-center justify-center py-16"
         >
           <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">📬</motion.span>
-          <h3 className="text-base font-extrabold text-gray-800 mb-1">타임캡슐을 묻어보세요</h3>
+          <h3 className="text-base font-bold text-gray-800 mb-1">타임캡슐을 묻어보세요</h3>
           <p className="text-sm text-gray-400">미래의 우리에게 메시지를 보내요</p>
         </motion.div>
       ) : (
@@ -382,11 +382,11 @@ export function Timecapsules() {
                         transition={{ duration: 2, repeat: Infinity }}
                         className="text-4xl block mb-3"
                       >🎁</motion.span>
-                      <div className="text-[14px] font-extrabold text-gray-800 mb-3">캡슐을 열 수 있어요!</div>
+                      <div className="text-[14px] font-bold text-gray-800 mb-3">캡슐을 열 수 있어요!</div>
                       <motion.button
                         onClick={() => openCapsule(i)}
                         whileTap={{ scale: 0.95 }}
-                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[13px] shadow-[0_4px_16px_rgba(236,72,153,0.25)]"
+                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[13px] shadow-[0_2px_8px_rgba(242,160,181,0.15)]"
                       >
                         열어보기
                       </motion.button>
@@ -416,7 +416,7 @@ export function Timecapsules() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-end justify-center"
             onClick={() => setModal(false)}
           >
             <motion.div
@@ -424,11 +424,11 @@ export function Timecapsules() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="bg-white/95 backdrop-blur-xl rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
+              className="bg-white backdrop-blur-sm rounded-t-3xl w-full max-w-[480px] p-5 pb-10 border-t border-white/50"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-extrabold text-gray-800">📬 타임캡슐 만들기</h3>
+                <h3 className="text-base font-bold text-gray-800">📬 타임캡슐 만들기</h3>
                 <button onClick={() => setModal(false)} className="p-2 -mr-1 text-gray-400 hover:text-gray-600"><X size={22} /></button>
               </div>
 
@@ -455,7 +455,7 @@ export function Timecapsules() {
                   onClick={save}
                   disabled={!form.message.trim() || !form.openDate}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-extrabold text-[15px] shadow-[0_8px_24px_rgba(236,72,153,0.25)] disabled:opacity-30"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-[15px] shadow-[0_2px_8px_rgba(242,160,181,0.2)] disabled:opacity-30"
                 >
                   캡슐 묻기
                 </motion.button>

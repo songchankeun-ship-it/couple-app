@@ -169,7 +169,7 @@ export default function CoupleOnboarding() {
                   whileTap={{ scale: 0.97 }}
                   onClick={handleFinish}
                   disabled={!myName.trim()}
-                  className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm disabled:opacity-40 shadow-[0_8px_24px_rgba(236,72,153,0.25)]"
+                  className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm disabled:opacity-40 shadow-[0_2px_8px_rgba(242,160,181,0.2)]"
                 >
                   완료 💕
                 </motion.button>
