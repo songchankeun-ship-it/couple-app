@@ -22,6 +22,7 @@ import CalendarView from './components/calendar/CalendarView'
 import { Wishlist } from './components/calendar/CalendarFeatures'
 import AnniversaryList from './components/home/AnniversaryList'
 import Settings from './components/more/Settings'
+import CoupleStats from './components/more/CoupleStats'
 
 // Onboarding
 import CoupleOnboarding from './components/onboarding/CoupleOnboarding'
@@ -37,9 +38,9 @@ const pageTransition = {
   ease: 'easeOut' as const,
 }
 
-function Content({ tab }: { tab: string }) {
+function Content({ tab, onNavigate }: { tab: string; onNavigate: (tab: string) => void }) {
   switch (tab) {
-    case 'homedash': return <HomeDashboard />
+    case 'homedash': return <HomeDashboard onNavigate={onNavigate} />
     case 'questions': return <DailyQuestion />
     case 'timeline': return <Timeline />
     case 'todo': return <CoupleTodo />
@@ -53,6 +54,7 @@ function Content({ tab }: { tab: string }) {
     case 'calendar': return <CalendarView />
     case 'wishlist': return <Wishlist />
     case 'annivlist': return <AnniversaryList />
+    case 'stats': return <CoupleStats />
     case 'settings': return <Settings />
     default: return <HomeDashboard />
   }
@@ -108,7 +110,7 @@ export default function App() {
           exit="exit"
           transition={pageTransition}
         >
-          <Content tab={subTab} />
+          <Content tab={subTab} onNavigate={setSubTab} />
         </motion.main>
       </AnimatePresence>
 
