@@ -107,11 +107,8 @@ export default function CoupleGames() {
   // ── BALANCE GAME ──
   const handleBalance = (choice: string) => {
     if (balanceTurn === 'me') {
-      const newMe = [...balanceMe, choice]
-      setBalanceMe(newMe)
-      if (newMe.length > balanceIdx) {
-        setBalanceTurn('you')
-      }
+      setBalanceMe(prev => [...prev, choice])
+      setBalanceTurn('you')
     } else {
       const newYou = [...balanceYou, choice]
       setBalanceYou(newYou)

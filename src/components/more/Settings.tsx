@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { SPACE_PRESETS } from '../../types/data'
-import type { SpaceType } from '../../types/data'
+import type { SpaceType, CoupleData } from '../../types/data'
+import { Download, Upload } from 'lucide-react'
 
 export default function Settings() {
   const { data, updateData, setField, connected, roomName, connectToRoom, disconnect } = useFirebase()
@@ -16,6 +17,7 @@ export default function Settings() {
   const [showSpaceType, setShowSpaceType] = useState(false)
   const [toast, setToast] = useState('')
   const photoRef = useRef<HTMLInputElement>(null)
+  const importRef = useRef<HTMLInputElement>(null)
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 2000) }
 
@@ -82,6 +84,39 @@ export default function Settings() {
     setRoomInput('')
     showToast(`"${room}" 방에 연결했어요!`)
   }
+
+  const exportData = useCallback(() => {
+    const json = JSON.stringify(data, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `couple-backup-${new Date().toISOString().split('T')[0]}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    showToast('백업 파일이 다운로드됐어요!')
+  }, [data])
+
+  const importData = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target!.result as string) as Partial<CoupleData>
+        if (!imported.names || !imported.chat) {
+          showToast('올바른 백업 파일이 아니에요')
+          return
+        }
+        updateData(() => imported as CoupleData)
+        showToast('데이터가 복원되었어요!')
+      } catch {
+        showToast('파일을 읽을 수 없어요')
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }, [updateData])
 
   const diffDays = data.ddayDate
     ? Math.floor((Date.now() - new Date(data.ddayDate).getTime()) / 86400000) + 1
@@ -251,8 +286,33 @@ export default function Settings() {
         )}
       </motion.div>
 
-      {/* App Info */}
+      {/* Data Backup */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-4 mb-3">
+        <div className="text-sm font-bold text-gray-800 mb-3">💾 데이터 백업</div>
+        <div className="flex gap-2">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={exportData}
+            className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/10 flex items-center justify-center gap-2 text-sm font-bold text-primary"
+          >
+            <Download size={16} />
+            내보내기
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={() => importRef.current?.click()}
+            className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/10 flex items-center justify-center gap-2 text-sm font-bold text-primary"
+          >
+            <Upload size={16} />
+            가져오기
+          </motion.button>
+          <input ref={importRef} type="file" accept=".json" className="hidden" onChange={importData} />
+        </div>
+        <p className="text-[10px] text-gray-400 mt-2 text-center">JSON 파일로 데이터를 백업하고 복원할 수 있어요</p>
+      </motion.div>
+
+      {/* App Info */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="glass-card p-4 mb-3">
         <div className="text-sm font-bold text-gray-800 mb-2">📱 앱 정보</div>
         <div className="space-y-1.5 text-xs text-gray-500">
           <div className="flex justify-between">

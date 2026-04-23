@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, ChevronRight } from 'lucide-react'
+import { useFirebase } from '../../contexts/FirebaseContext'
 
 interface DateCourse {
   id: string
@@ -107,19 +108,26 @@ const CURATED_COURSES: DateCourse[] = [
 ]
 
 export default function DateFeed() {
+  const { data, updateData } = useFirebase()
   const [selectedCat, setSelectedCat] = useState<string>('전체')
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set())
+
+  const likedCourses = data.likedCourses || []
+  const likedIds = new Set(likedCourses)
 
   const filtered = selectedCat === '전체'
     ? CURATED_COURSES
     : CURATED_COURSES.filter(c => c.category === selectedCat)
 
   const toggleLike = (id: string) => {
-    setLikedIds(prev => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
+    updateData(prev => {
+      const current = prev.likedCourses || []
+      return {
+        ...prev,
+        likedCourses: current.includes(id)
+          ? current.filter(c => c !== id)
+          : [...current, id]
+      }
     })
   }
 

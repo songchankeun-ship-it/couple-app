@@ -42,6 +42,7 @@ export interface CoupleData {
   roles?: RoleItem[]
   timelineEntries?: TimelineEntry[]
   gameHistory?: GameResult[]
+  likedCourses?: string[]
 }
 
 export interface TimelineEntry {
@@ -246,4 +247,5 @@ export const DEFAULT_DATA: CoupleData = {
   roles: [],
   timelineEntries: [],
   gameHistory: [],
+  likedCourses: [],
 }

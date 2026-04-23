@@ -1,23 +1,57 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
-import { Plus, Trash2, X } from 'lucide-react'
+import { Plus, Trash2, X, ImagePlus } from 'lucide-react'
 
 // ===== MEMORIES =====
 export function Memories() {
   const { data, updateData } = useFirebase()
   const [modal, setModal] = useState(false)
   const [form, setForm] = useState({ title: '', date: '', desc: '' })
+  const [formPhotos, setFormPhotos] = useState<string[]>([])
+  const [viewPhoto, setViewPhoto] = useState<string | null>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   const memories = (data.memories || []).filter(Boolean)
+
+  const addPhoto = () => {
+    photoInputRef.current?.click()
+  }
+
+  const handlePhotoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const max = 600
+        let w = img.width, h = img.height
+        if (w > max) { h = h * max / w; w = max }
+        canvas.width = w; canvas.height = h
+        canvas.getContext('2d')!.drawImage(img, 0, 0, w, h)
+        const src = canvas.toDataURL('image/jpeg', 0.6)
+        setFormPhotos(prev => [...prev, src])
+      }
+      img.src = ev.target!.result as string
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }
 
   const save = () => {
     if (!form.title.trim()) return
     updateData(prev => ({
       ...prev,
-      memories: [...(prev.memories || []), { ...form, date: form.date || new Date().toISOString().split('T')[0] }]
+      memories: [...(prev.memories || []), {
+        ...form,
+        date: form.date || new Date().toISOString().split('T')[0],
+        photos: formPhotos.length > 0 ? formPhotos : undefined,
+      }]
     }))
     setForm({ title: '', date: '', desc: '' })
+    setFormPhotos([])
     setModal(false)
   }
 
@@ -91,17 +125,31 @@ export function Memories() {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <motion.div
-                        animate={{ rotate: [0, -5, 5, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                        className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xl shrink-0"
-                      >
-                        📸
-                      </motion.div>
+                      {m.photos?.length ? (
+                        <div
+                          onClick={() => setViewPhoto(m.photos![0])}
+                          className="w-14 h-14 rounded-xl overflow-hidden shrink-0 cursor-pointer shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                        >
+                          <img src={m.photos[0]} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ) : (
+                        <motion.div
+                          animate={{ rotate: [0, -5, 5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xl shrink-0"
+                        >
+                          📸
+                        </motion.div>
+                      )}
                       <div className="flex-1 min-w-0">
                         <div className="text-[14px] font-bold text-gray-800">{m.title}</div>
                         {m.desc && <div className="text-[12px] text-gray-500 mt-0.5">{m.desc}</div>}
-                        <div className="text-[11px] text-gray-400 mt-1">{m.date}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[11px] text-gray-400">{m.date}</span>
+                          {m.photos && m.photos.length > 1 && (
+                            <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">+{m.photos.length}장</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <motion.button
@@ -112,12 +160,48 @@ export function Memories() {
                       <Trash2 size={16} />
                     </motion.button>
                   </div>
+                  {/* Photo thumbnails */}
+                  {m.photos && m.photos.length > 1 && (
+                    <div className="flex gap-1.5 mt-3 overflow-x-auto scrollbar-hide">
+                      {m.photos.map((p, pi) => (
+                        <div
+                          key={pi}
+                          onClick={() => setViewPhoto(p)}
+                          className="w-16 h-16 rounded-lg overflow-hidden shrink-0 cursor-pointer"
+                        >
+                          <img src={p} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               )
             })}
           </AnimatePresence>
         </div>
       )}
+
+      {/* Photo Lightbox */}
+      <AnimatePresence>
+        {viewPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center"
+            onClick={() => setViewPhoto(null)}
+          >
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              src={viewPhoto}
+              alt=""
+              className="max-w-full max-h-[80vh] rounded-2xl shadow-2xl"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Add Modal */}
       <AnimatePresence>
@@ -127,7 +211,7 @@ export function Memories() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-end justify-center"
-            onClick={() => setModal(false)}
+            onClick={() => { setModal(false); setFormPhotos([]) }}
           >
             <motion.div
               initial={{ y: '100%' }}
@@ -163,6 +247,33 @@ export function Memories() {
                   rows={3}
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-primary outline-none text-sm bg-white/80 resize-none"
                 />
+
+                {/* Photo attach */}
+                <div>
+                  <input ref={photoInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoInput} />
+                  {formPhotos.length > 0 && (
+                    <div className="flex gap-2 mb-2 overflow-x-auto scrollbar-hide">
+                      {formPhotos.map((p, pi) => (
+                        <div key={pi} className="relative shrink-0">
+                          <img src={p} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                          <button
+                            onClick={() => setFormPhotos(prev => prev.filter((_, idx) => idx !== pi))}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px] shadow"
+                          >✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <motion.button
+                    onClick={addPhoto}
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full py-2.5 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 font-bold text-sm flex items-center justify-center gap-2 hover:border-primary/30 transition"
+                  >
+                    <ImagePlus size={16} />
+                    사진 추가 {formPhotos.length > 0 ? `(${formPhotos.length})` : ''}
+                  </motion.button>
+                </div>
+
                 <motion.button
                   onClick={save}
                   disabled={!form.title.trim()}
