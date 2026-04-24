@@ -1,0 +1,794 @@
+<!doctype html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Finance 101 Learning App",
+  "schemaVersion": 1,
+  "description": "금융 초보를 위한 인터랙티브 학습 웹앱 - 개인재무, 주식/투자, 부동산, 절세/연금 4가지 분야 + 복리 계산기 등 도구 포함"
+}
+</script>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>머니 부트캠프 · 금융 기초</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: #f7f5f2; color: #1c1b1a; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 18px 80px; }
+  header.top { display: flex; align-items: center; justify-content: space-between; padding: 6px 4px 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-logo { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, #ffd47a, #ff8a5b); display: grid; place-items: center; color: #fff; font-weight: 800; box-shadow: 0 6px 14px -6px rgba(255, 138, 91, .55); }
+  .brand-title { font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+  .brand-sub { font-size: 12px; color: #7a736a; margin-top: 1px; }
+  .level-pill { background: #fff; border: 1px solid #ece7df; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #4f4a44; }
+  .today-card { background: linear-gradient(135deg, #ffd47a 0%, #ff8a5b 100%); border-radius: 22px; padding: 22px; box-shadow: 0 18px 32px -22px rgba(255,138,91,.55); margin-bottom: 14px; color: #2a1a07; }
+  .today-card .row1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .today-card .label { font-size: 12px; font-weight: 700; opacity: .65; letter-spacing: 0.04em; }
+  .today-card .day-pill { background: rgba(255,255,255,.4); padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .today-card h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+  .today-card .sub { font-size: 13px; opacity: .75; margin-top: 4px; }
+  .today-list { margin: 16px 0 14px; }
+  .today-item { background: rgba(255,255,255,.5); padding: 11px 14px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .12s; }
+  .today-item:hover { background: rgba(255,255,255,.7); }
+  .today-item.done { background: rgba(255,255,255,.3); text-decoration: line-through; opacity: .65; }
+  .today-item .check { width: 20px; height: 20px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 12px; flex: none; border: 2px solid #fff; }
+  .today-item.done .check { background: #1f8e5a; color: #fff; border-color: #1f8e5a; }
+  .today-cta { display: block; width: 100%; padding: 12px; border-radius: 12px; background: #2a1a07; color: #fff; font-weight: 700; font-size: 14px; }
+  .today-card.done { background: linear-gradient(135deg, #1f8e5a 0%, #167145 100%); color: #fff; }
+  .today-card.done .label, .today-card.done .sub { opacity: .85; }
+  .today-card.done .day-pill { background: rgba(255,255,255,.18); color: #fff; }
+  .today-card.done .today-item { background: rgba(255,255,255,.16); color: #fff; }
+  .today-card.completed { background: linear-gradient(135deg, #6f5cf2 0%, #4836d6 100%); color: #fff; }
+  .today-card.completed .label, .today-card.completed .sub { opacity: .85; }
+  .pace-strip { background: #fff; border: 1px solid #ece7df; border-radius: 16px; padding: 14px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .pace-strip .info { font-size: 12px; color: #5e564d; line-height: 1.45; }
+  .pace-strip .info b { color: #1c1b1a; font-weight: 700; }
+  .pace-segs { display: flex; background: #f3eee5; border-radius: 10px; padding: 3px; }
+  .pace-segs button { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6a6258; }
+  .pace-segs button.active { background: #fff; color: #1c1b1a; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .progress-card { background: linear-gradient(135deg, #1f1d1c 0%, #2d2a26 100%); color: #fff; border-radius: 22px; padding: 18px 20px 16px; box-shadow: 0 14px 26px -22px rgba(0,0,0,.45); margin-bottom: 14px; }
+  .progress-card .row { display: flex; justify-content: space-between; align-items: end; margin-bottom: 12px; }
+  .progress-card h2 { font-size: 14px; font-weight: 700; }
+  .progress-card .muted { color: #b9b3aa; font-size: 11px; margin-top: 2px; }
+  .progress-card .pct { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .bar { height: 7px; border-radius: 999px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #ffd47a, #ff8a5b); transition: width .4s ease; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .stat { background: rgba(255,255,255,.06); border-radius: 12px; padding: 9px 10px; border: 1px solid rgba(255,255,255,.06); }
+  .stat .lbl { font-size: 10px; color: #b9b3aa; }
+  .stat .val { font-size: 14px; font-weight: 700; margin-top: 2px; }
+  .tabs { display: flex; gap: 6px; background: #efeae0; padding: 5px; border-radius: 14px; margin-bottom: 18px; }
+  .tabs button { flex: 1; padding: 9px 8px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #6a6258; }
+  .tabs button.active { background: #fff; color: #1c1b1a; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+  .module { background: #fff; border: 1px solid #ece7df; border-radius: 18px; padding: 16px 16px 14px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; text-align: left; display: block; width: 100%; }
+  .module:hover { transform: translateY(-2px); box-shadow: 0 12px 22px -16px rgba(0,0,0,.18); }
+  .module .icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; margin-bottom: 10px; }
+  .icon.green { background: #e7f3ea; }
+  .icon.blue { background: #e3edf8; }
+  .icon.amber { background: #fbecd7; }
+  .icon.violet { background: #ece6f6; }
+  .module h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .module .desc { font-size: 12px; color: #7a736a; margin-bottom: 12px; min-height: 32px; }
+  .module .mini-bar { height: 6px; background: #f0ebe1; border-radius: 999px; overflow: hidden; }
+  .module .mini-bar > span { display: block; height: 100%; border-radius: 999px; background: #1c1b1a; }
+  .module .meta { display: flex; justify-content: space-between; font-size: 11px; color: #8a8278; margin-top: 6px; }
+  .lesson-list { background: #fff; border: 1px solid #ece7df; border-radius: 18px; overflow: hidden; }
+  .lesson-list-header { padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3eee5; }
+  .lesson-list-header h3 { font-size: 15px; font-weight: 700; }
+  .lesson-list-header .back { font-size: 13px; color: #7a736a; }
+  .lesson { padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #f6f1e8; cursor: pointer; transition: background .12s; position: relative; }
+  .lesson:hover { background: #faf7f1; }
+  .lesson .num { width: 28px; height: 28px; border-radius: 50%; background: #f3eee5; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #6a6258; flex: none; }
+  .lesson.done .num { background: #1f8e5a; color: #fff; }
+  .lesson .title { font-size: 14px; font-weight: 600; flex: 1; }
+  .lesson .day-tag { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 999px; background: #f3eee5; color: #7a736a; }
+  .lesson.today .day-tag { background: #ff8a5b; color: #fff; }
+  .lesson.future .day-tag { background: #ece6f6; color: #5b48a0; }
+  .lesson.past .day-tag { background: #e3edf8; color: #305892; }
+  .lesson .arrow { color: #b8b1a6; font-size: 16px; }
+  .lesson-detail { background: #fff; border: 1px solid #ece7df; border-radius: 18px; padding: 22px 22px 24px; }
+  .crumb { font-size: 12px; color: #8a8278; margin-bottom: 8px; }
+  .lesson-detail h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .lesson-detail .lead { color: #5e564d; font-size: 14px; margin-bottom: 18px; }
+  .lesson-detail h4 { font-size: 14px; font-weight: 700; margin: 18px 0 8px; }
+  .lesson-detail p { font-size: 14px; color: #2c2a28; margin-bottom: 10px; }
+  .lesson-detail ul { margin: 4px 0 12px 18px; }
+  .lesson-detail li { font-size: 14px; color: #2c2a28; margin-bottom: 6px; }
+  .callout { background: #fff7e3; border: 1px solid #f3e3b3; border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #6b5a23; margin: 14px 0; }
+  .callout.tip { background: #eaf3ff; border-color: #c8defb; color: #1f4a87; }
+  .callout.warn { background: #ffeae3; border-color: #f8c8b8; color: #903517; }
+  .callout.year { background: #fef0f4; border-color: #f5c5d4; color: #8c2a4a; font-size: 12px; }
+  .formula { background: #1c1b1a; color: #f6f1e8; border-radius: 10px; padding: 10px 14px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; margin: 10px 0; overflow-x: auto; }
+  .check-row { display: flex; gap: 8px; margin-top: 22px; padding-top: 18px; border-top: 1px solid #f3eee5; flex-wrap: wrap; }
+  .btn { padding: 11px 16px; border-radius: 12px; font-weight: 600; font-size: 14px; background: #1c1b1a; color: #fff; }
+  .btn.ghost { background: #f3eee5; color: #1c1b1a; }
+  .btn.success { background: #1f8e5a; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .quiz { background: #f9f5ec; border: 1px dashed #e2d8c0; border-radius: 14px; padding: 14px; margin-top: 16px; }
+  .quiz .q { font-weight: 700; font-size: 14px; margin-bottom: 10px; }
+  .quiz .opts { display: grid; gap: 8px; }
+  .quiz button.opt { text-align: left; padding: 10px 14px; border-radius: 10px; background: #fff; border: 1px solid #eee2c8; font-size: 13px; font-weight: 500; }
+  .quiz button.opt.correct { background: #e7f6eb; border-color: #9bcfa8; color: #1c5f33; }
+  .quiz button.opt.wrong { background: #ffe9e2; border-color: #f4b9a4; color: #872f0f; }
+  .quiz .explain { margin-top: 10px; font-size: 13px; color: #5b5447; line-height: 1.6; }
+  .tool-card { background: #fff; border: 1px solid #ece7df; border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+  .tool-card h3 { font-size: 15px; font-weight: 800; }
+  .tool-card .tdesc { font-size: 12px; color: #7a736a; margin-top: 2px; margin-bottom: 14px; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .field label { font-size: 12px; color: #6a6258; font-weight: 600; }
+  .field input, .field select { border: 1px solid #e4dccd; padding: 10px 12px; border-radius: 10px; font-size: 14px; background: #fff; color: #1c1b1a; }
+  .field input:focus, .field select:focus { outline: 2px solid #ffd47a; border-color: #ff8a5b; }
+  .field .hint { font-size: 11px; color: #8a8278; }
+  .result { background: #fff7e3; border: 1px solid #f3e3b3; padding: 14px; border-radius: 12px; margin-top: 10px; }
+  .result .big { font-size: 24px; font-weight: 800; color: #b1620e; letter-spacing: -0.02em; }
+  .result .small { font-size: 12px; color: #7a6034; margin-top: 4px; }
+  .term { background: #fff; border: 1px solid #ece7df; border-radius: 14px; padding: 14px 16px; margin-bottom: 8px; }
+  .term .name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .term .def { font-size: 13px; color: #5e564d; }
+  .term .ko { color: #8a8278; font-size: 12px; margin-left: 6px; font-weight: 500; }
+  .schedule { background: #fff; border: 1px solid #ece7df; border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+  .schedule h3 { font-size: 15px; font-weight: 800; margin-bottom: 12px; }
+  .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .day-cell { aspect-ratio: 1 / 1; border-radius: 10px; background: #f3eee5; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #8a8278; cursor: pointer; transition: transform .1s; position: relative; }
+  .day-cell:hover { transform: scale(1.05); }
+  .day-cell.today { background: #ff8a5b; color: #fff; box-shadow: 0 4px 10px -4px rgba(255,138,91,.6); }
+  .day-cell.done { background: #1f8e5a; color: #fff; }
+  .day-cell.future { background: #f7f4ee; color: #b8b1a6; }
+  .day-cell .num { font-size: 13px; font-weight: 800; }
+  .day-cell .dot { font-size: 9px; margin-top: 1px; opacity: .8; }
+  .empty { text-align: center; color: #8a8278; padding: 40px 20px; font-size: 13px; }
+  .hidden { display: none !important; }
+  .reset-btn { font-size: 11px; color: #8a8278; text-decoration: underline; cursor: pointer; }
+  .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .badge { background: rgba(255,255,255,.08); padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #b9b3aa; }
+  .badge.unlocked { background: #ffd47a; color: #6b3e00; }
+  .search { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid #e4dccd; background: #fff; font-size: 14px; margin-bottom: 12px; }
+  .section-title { font-size: 13px; font-weight: 700; color: #5e564d; margin: 18px 4px 10px; }
+  .disclaimer { background: #fff7e3; border: 1px solid #f3e3b3; border-radius: 12px; padding: 12px 14px; font-size: 11.5px; color: #6b5a23; margin-top: 18px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-logo">$</div>
+      <div>
+        <div class="brand-title">머니 부트캠프</div>
+        <div class="brand-sub">하루 한 강씩, 꾸준히 자산 증식의 길로</div>
+      </div>
+    </div>
+    <div class="level-pill" id="levelPill">초보 Lv.1</div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="active" data-tab="home">홈</button>
+    <button data-tab="learn">학습</button>
+    <button data-tab="tools">도구</button>
+    <button data-tab="glossary">용어사전</button>
+  </nav>
+
+  <main id="view"></main>
+
+  <div class="disclaimer">
+    ⚠️ <b>면책 안내</b> · 본 콘텐츠는 2026년 4월 기준 한국 세법·금융 규정으로 작성된 <b>교육 자료</b>입니다. 절세·청약·연금 관련 한도와 공제율은 매년 바뀝니다. 실제 투자·세무 결정 전에는 반드시 <b>국세청 홈택스 또는 전문가</b>에게 최신 정보를 확인하세요. 과거 수익률은 미래 수익을 보장하지 않으며, 모든 투자에는 원금 손실 위험이 있습니다.
+  </div>
+
+  <p style="text-align:center; margin-top:20px;">
+    <span class="reset-btn" id="resetBtn">진행상황 초기화</span>
+  </p>
+</div>
+
+<script>
+const MODULES = [
+  {
+    id: "personal", title: "개인 재무관리", icon: "💰", iconClass: "green",
+    desc: "생애설계, 예산, 비상금, 복리 — 토대",
+    lessons: [
+      {
+        id: "lp", title: "생애재무설계 — 큰 그림 그리기 먼저",
+        lead: "돈 모으기 전에 '왜·언제·얼마' 필요한지 정해보세요.",
+        body: `<p>금융 공부는 도구일 뿐이에요. 진짜 중요한 건 <b>"내가 언제, 얼마를, 왜 필요한가?"</b>를 먼저 그리는 일입니다.</p><h4>3가지 자금으로 나누기</h4><ul><li><b>단기 자금 (3년 이내)</b> — 비상금, 결혼/이사/여행 자금 → 예적금·파킹통장·CMA</li><li><b>중기 자금 (3~10년)</b> — 내 집 마련, 사업 자금 → 적금 + 일부 안전 투자</li><li><b>장기 자금 (10년 이상)</b> — 노후 자금, 자녀 학자금 → ETF·연금 등 위험자산 비중 ↑</li></ul><div class="callout">💡 <b>"100 - 나이 = 주식 비중"</b> 룰<br>30살이면 주식 70% / 채권 30%, 60살이면 주식 40% / 채권 60%. 나이가 들수록 안전자산 비중을 늘리는 게 일반적이에요.</div><h4>먼저 답해볼 3가지 질문</h4><ul><li>📅 언제까지 얼마가 필요한가? (목표 시점·금액)</li><li>💰 매달 얼마를 저축할 수 있는가? (현실적 한도)</li><li>📉 얼마를 잃어도 괜찮은가? (위험 감내력)</li></ul><div class="callout tip">💡 목표 없이 그냥 모으면 동기부여가 약해요. 종이에 "X년 후 Y원" 적어두면 의외로 큰 도움됩니다.</div>`,
+        quiz: { q: "3년 이내에 쓸 단기 자금에 가장 적합한 운용처는?", opts: ["미국 주식 ETF 적립", "파킹통장·CMA", "20년 만기 연금저축"], answer: 1, explain: "단기 자금은 원금 손실 위험이 없는 곳에 둬야 해요. 주식은 단기 변동성이 크고, 연금은 55세 전 인출하면 큰 불이익이 있어요." }
+      },
+      {
+        id: "p1", title: "월급 흐름 파악하기 (수입·지출·저축)",
+        lead: "돈을 모으려면 먼저 내 돈이 어디로 가는지 알아야 해요.",
+        body: `<p>금융 공부의 첫 단계는 <b>현금흐름</b>을 보는 거예요. 매달 들어오는 돈(수입)에서 빠져나가는 돈(지출)을 빼면 남는 돈, 즉 <b>저축</b>이 나옵니다.</p><h4>저축률 공식</h4><div class="formula">저축률 (%) = (저축액 ÷ 세후 수입) × 100</div><p>일반적으로 사회초년생은 <b>최소 30%</b>를 권장하지만, 개인의 소득·주거비·가족 상황에 따라 현실적인 수치는 크게 다릅니다.</p><div class="callout tip">💡 <b>꿀팁</b> · 월급 들어오자마자 저축할 금액을 <b>먼저 떼어놓고</b>(선저축 후지출) 남은 돈으로 생활하면 저축률을 지키기 쉬워요.</div>`,
+        quiz: { q: "월 세후 수입이 300만원, 지출이 210만원이면 저축률은?", opts: ["20%", "30%", "50%"], answer: 1, explain: "저축액 90만원 ÷ 수입 300만원 = 30%. 사회초년생 권장 저축률에 해당합니다." }
+      },
+      {
+        id: "p2", title: "비상금 — 모든 투자의 안전벨트",
+        lead: "투자보다 먼저 만들어야 하는 게 비상금이에요.",
+        body: `<p><b>비상금(Emergency Fund)</b>은 갑작스런 실직, 의료비, 큰 사고에 대비한 현금이에요. 보통 <b>3~6개월치 생활비</b>를 입출금 자유로운 통장(파킹통장, CMA)에 넣어둡니다.</p><h4>왜 중요할까?</h4><ul><li>비상금이 없으면 위기 때 <b>주식/적금을 손해보고 깨야</b> 해요.</li><li>비상금이 있으면 마음 편히 <b>장기 투자</b>를 유지할 수 있어요.</li></ul><div class="callout">📦 추천 위치: <b>파킹통장</b>(연 2~3%대), <b>CMA</b>(증권사 종합자산관리계좌), <b>증권사 RP</b>(환매조건부채권) — 수시 입출금 가능하면서 이자도 챙길 수 있어요.</div>`,
+        quiz: { q: "월 생활비 200만원인 사람의 적정 비상금은?", opts: ["100만원", "600~1,200만원", "5,000만원 이상"], answer: 1, explain: "보통 3~6개월치 생활비를 권장하니 200만원 × 3~6개월 = 600~1,200만원이 적정해요." }
+      },
+      {
+        id: "p3", title: "50/30/20 예산 법칙",
+        lead: "복잡한 가계부 없이 쓸 수 있는 예산 가이드라인.",
+        body: `<p>미국에서 유명한 <b>50/30/20 법칙</b>은 세후 수입을 세 가지로 나누는 방법이에요.</p><ul><li><b>50% 필수지출</b> — 월세, 공과금, 식비, 교통비 등</li><li><b>30% 자유지출</b> — 외식, 쇼핑, 여행, 취미</li><li><b>20% 저축·투자·부채상환</b></li></ul><div class="callout tip">💡 한국 사회초년생은 부모님과 함께 살거나 학자금 부담이 적다면 <b>40/20/40</b>처럼 저축 비중을 더 높여보세요.</div>`,
+        quiz: { q: "50/30/20 법칙에서 '20'에 해당하는 것은?", opts: ["월세·식비 같은 필수지출", "여행·쇼핑 같은 자유지출", "저축·투자·부채상환"], answer: 2, explain: "20%는 미래를 위한 저축·투자·빚 갚기에 쓰입니다." }
+      },
+      {
+        id: "p4", title: "복리 — 돈이 돈을 버는 마법",
+        lead: "아인슈타인이 '세계 8대 불가사의'라 부른 개념.",
+        body: `<p><b>복리(Compound Interest)</b>는 이자에 또 이자가 붙는 구조예요. 시간이 길수록 효과가 폭발적으로 커집니다.</p><div class="formula">미래가치 = 원금 × (1 + 수익률)^년수</div><h4>예시 — 매달 30만원 투자, 연 7% 수익률 (월복리 가정)</h4><ul><li>10년 후: 약 5,200만원 (원금 3,600만원)</li><li>20년 후: 약 1억 5,600만원 (원금 7,200만원)</li><li>30년 후: 약 3억 6,000만원 (원금 1억 800만원)</li></ul><div class="callout warn">⚠️ <b>실제 수익률은 매년 다릅니다.</b> 연 7%는 가정일 뿐, 시장 상황에 따라 마이너스가 나는 해도 있어요. 그래서 장기·분산 투자가 필수.</div><p>👉 '도구' 탭의 <b>복리 계산기</b>로 직접 시뮬레이션 해보세요!</p>`,
+        quiz: { q: "복리 효과를 가장 크게 만드는 핵심 요소는?", opts: ["원금이 많은 것", "투자 기간이 긴 것", "단기 수익률"], answer: 1, explain: "복리는 시간의 마법이에요. 수익률보다 '얼마나 오래' 굴리느냐가 더 중요합니다." }
+      },
+      {
+        id: "p5", title: "신용점수 관리 기본",
+        lead: "낮은 금리 = 사실상 더 많은 자산.",
+        body: `<p>한국에서 신용점수는 <b>NICE</b>·<b>KCB</b> 두 곳에서 매겨요(1,000점 만점). 점수가 높을수록 대출 금리가 낮아 자산 형성에 유리합니다.</p><h4>점수 올리는 방법</h4><ul><li>✅ 신용카드를 <b>꾸준히 적당히 쓰고 연체 없이 결제</b></li><li>✅ 통신비·공과금 <b>자동이체 + 성실납부 등록</b> (NICE 가점)</li><li>✅ 대출이 있다면 <b>꾸준히 갚는 이력</b>이 점수에 +</li><li>❌ 단기간에 여러 곳 카드/대출 신청은 마이너스</li><li>❌ 현금서비스, 카드론, 단기 대부업 이용은 큰 마이너스</li></ul><div class="callout tip">💡 <b>토스·카카오페이·뱅크샐러드</b>에서 무료로 신용점수 조회 가능. 자주 봐도 점수에 영향 없어요.</div>`,
+        quiz: { q: "신용점수에 가장 안 좋은 것은?", opts: ["월 100만원 카드 사용 후 정상 결제", "통신비 자동이체 등록", "현금서비스·카드론 자주 사용"], answer: 2, explain: "현금서비스·카드론은 '급전이 필요한 상태'로 인식돼 점수에 큰 마이너스예요." }
+      }
+    ]
+  },
+  {
+    id: "stocks", title: "주식 / 투자", icon: "📈", iconClass: "blue",
+    desc: "금리, ETF, 분산, 채권 — 자산 증식 엔진",
+    lessons: [
+      {
+        id: "rt", title: "금리와 인플레이션 — 모든 자산의 배경음악",
+        lead: "이 두 가지를 모르면 투자 판단이 어려워져요.",
+        body: `<h4>기준금리 (Base Rate)</h4><p><b>한국은행 금융통화위원회</b>가 결정하는 정책금리예요. 모든 시중 금리(예금·대출·채권)의 출발점이 됩니다.</p><ul><li>금리 ↑ → 예적금 이자 ↑, 대출 이자 ↑, 자산 가격 ↓ (압박)</li><li>금리 ↓ → 예적금 이자 ↓, 대출 이자 ↓, 자산 가격 ↑ (호재)</li></ul><h4>인플레이션 (물가 상승)</h4><p>같은 100만원으로 살 수 있는 물건이 점점 줄어드는 현상. 한국의 장기 평균 인플레이션은 연 약 <b>2%</b> 수준이에요.</p><div class="formula">실질 수익률 = 명목 수익률 - 인플레이션</div><p>예: 예금 이자 3%, 물가 2% → <b>실질 수익률 1%</b>. 물가보다 낮은 이자의 예금은 사실상 자산이 줄어드는 셈이에요.</p><div class="callout warn">⚠️ <b>현금만 들고 있는 것도 위험</b>입니다. 물가 상승만큼 구매력이 매년 약 2%씩 줄어들기 때문에, 장기적으론 인플레이션 이상의 수익을 내는 자산(주식·부동산 등)에 일부를 넣어야 해요.</div><h4>금리와 자산의 관계 (요약)</h4><ul><li><b>금리 상승기</b>: 채권 가격 ↓, 성장주(테크) ↓, 예적금 매력 ↑</li><li><b>금리 하락기</b>: 채권 가격 ↑, 성장주 ↑, 부동산 ↑ (대출 부담 ↓)</li></ul>`,
+        quiz: { q: "예금 이자가 연 3%, 물가가 연 4% 오를 때 실질 수익률은?", opts: ["+1%", "0%", "-1%"], answer: 2, explain: "명목 수익률(3%) - 인플레이션(4%) = -1%. 돈은 늘어 보여도 실제로 살 수 있는 물건은 줄어드는 셈이에요." }
+      },
+      {
+        id: "s1", title: "주식이란? — 회사의 조각을 사는 일",
+        lead: "주식 한 주 = 회사의 아주 작은 지분.",
+        body: `<p><b>주식(Stock)</b>은 회사의 소유권을 잘게 쪼갠 거예요. 삼성전자 1주를 사면 삼성전자의 (아주아주 작은) 주인이 되는 거죠.</p><h4>돈 버는 방법 2가지</h4><ul><li><b>시세차익</b> — 싸게 사서 비싸게 판다</li><li><b>배당</b> — 회사가 번 돈의 일부를 주주에게 나눠줌</li></ul><div class="callout warn">⚠️ 주식은 원금 손실이 날 수 있어요. 잃어도 생활에 지장 없는 돈으로 시작하세요.</div>`,
+        quiz: { q: "주식 투자로 돈을 버는 방법이 아닌 것은?", opts: ["배당금 수령", "시세차익", "원금 보장 이자"], answer: 2, explain: "주식은 원금 보장이 없어요. 그래서 예적금보다 기대 수익률이 높은 것이기도 합니다." }
+      },
+      {
+        id: "s2", title: "ETF — 초보의 가장 좋은 친구",
+        lead: "한 종목으로 수십~수백 개 회사에 분산투자.",
+        body: `<p><b>ETF(Exchange Traded Fund)</b>는 여러 주식을 묶어놓은 펀드를 주식처럼 거래할 수 있게 만든 상품이에요.</p><h4>왜 초보에게 좋을까?</h4><ul><li><b>자동 분산투자</b> — 한 회사가 망해도 충격이 작아요</li><li><b>저렴한 수수료</b> — 일반 펀드보다 운용비가 훨씬 낮음</li><li><b>투명함</b> — 어떤 종목이 들어있는지 매일 공개</li></ul><h4>대표 ETF 예시</h4><ul><li><b>S&P 500</b> 추종 ETF — 미국 대표 500개 기업에 분산 (예: SPY, VOO, KODEX 미국S&P500)</li><li><b>나스닥 100</b> ETF — 애플·구글·엔비디아 등 IT 중심 (예: QQQ)</li><li><b>전세계 ETF</b> — 한 번에 글로벌 분산 (예: VT, VWRA)</li></ul><div class="callout tip">💡 워런 버핏도 "내가 죽으면 아내 자산의 90%는 S&P 500 ETF에 넣어두라"고 유언장에 썼어요.</div>`,
+        quiz: { q: "ETF의 가장 큰 장점은?", opts: ["원금이 보장된다", "한 상품으로 자동 분산투자가 된다", "단기간에 큰 수익이 보장된다"], answer: 1, explain: "ETF의 핵심은 '분산'이에요. 원금 보장도, 단기 큰 수익도 보장되지 않습니다." }
+      },
+      {
+        id: "s3", title: "분산투자 — 계란을 한 바구니에 담지 마라",
+        lead: "위험을 줄이는 가장 확실한 방법.",
+        body: `<p>한 종목/한 나라에 몰빵하면 그 회사·나라가 휘청일 때 내 자산도 함께 망가져요. <b>분산투자</b>는 위험을 여러 곳에 나눠 충격을 완화합니다.</p><h4>3가지 분산</h4><ul><li><b>종목 분산</b> — 여러 회사에 나눠 투자</li><li><b>지역 분산</b> — 한국 + 미국 + 신흥국 등 글로벌</li><li><b>자산 분산</b> — 주식 + 채권 + 금 + 부동산</li></ul><div class="callout">📊 흔한 초보 포트폴리오 예: 미국 ETF 60% + 한국 ETF 20% + 채권 ETF 20%<br>(나이가 많아질수록 채권 비중을 늘리는 게 일반적)</div>`,
+        quiz: { q: "분산투자가 줄여주는 위험은?", opts: ["전체 시장이 폭락하는 위험", "특정 종목만 망하는 위험", "물가 상승 위험"], answer: 1, explain: "분산은 '개별 종목 위험'을 줄여줘요. 시장 전체가 폭락하는 위험은 자산 분산(주식+채권 등)으로 대응합니다." }
+      },
+      {
+        id: "bd", title: "채권 기초 — 흔들리는 시장의 안전벨트",
+        lead: "주식만큼 중요한, 포트폴리오의 균형추.",
+        body: `<p><b>채권(Bond)</b>은 정부나 회사에 돈을 빌려주고 정해진 기간 동안 이자를 받은 뒤 만기에 원금을 돌려받는 상품이에요.</p><h4>주식 vs 채권 (한 줄 요약)</h4><ul><li><b>주식</b> = 회사의 <b>주인</b>이 됨 (이익 공유, 망하면 0원)</li><li><b>채권</b> = 회사·국가에 <b>돈 빌려주는 사람</b> (정해진 이자 받음, 더 안전)</li></ul><h4>채권의 종류</h4><ul><li><b>국채</b> — 가장 안전 (한국·미국 정부)</li><li><b>회사채</b> — 신용등급에 따라 위험·수익률 다양</li><li><b>채권 ETF</b> — 여러 채권을 묶어 ETF로 거래 (예: KODEX 국고채, 미국 AGG·BND·TLT)</li></ul><h4>금리와 채권 가격은 반대로 움직여요</h4><p>금리가 오르면 새로 발행되는 채권이 더 높은 이자를 줘요. 그래서 <b>기존 낮은 이자 채권의 가격은 떨어집니다</b>.</p><div class="formula">금리 ↑ → 채권 가격 ↓<br>금리 ↓ → 채권 가격 ↑</div><h4>왜 포트폴리오에 채권을 넣나?</h4><ul><li>주식이 폭락할 때 채권은 보통 잘 버티거나 오름 → <b>충격 완화</b></li><li>안정적인 이자 수익 → <b>현금흐름</b></li><li>나이가 들수록 비중을 늘리는 게 일반적</li></ul><div class="callout tip">💡 초보 추천: 한국 단기 국채 ETF나 미국 종합채권 ETF(AGG, BND)를 포트폴리오에 20~40% 정도 넣어보세요.</div>`,
+        quiz: { q: "기준금리가 인상되면 일반적으로 채권 가격은?", opts: ["오른다", "떨어진다", "변동 없음"], answer: 1, explain: "금리와 채권 가격은 반비례. 새 채권이 더 높은 이자를 주면, 기존 낮은 이자 채권은 가치가 떨어져요." }
+      },
+      {
+        id: "s4", title: "적립식 투자 (DCA) — 매수 타이밍 고민 없애기",
+        lead: "매달 같은 금액으로 꾸준히 사 모으는 전략.",
+        body: `<p><b>DCA(Dollar Cost Averaging, 적립식 투자)</b>는 시점을 분산해 매달 일정 금액을 자동으로 매수하는 방법이에요.</p><h4>장점</h4><ul><li>가격이 떨어지면 <b>더 많은 수량</b>을 사고, 오르면 <b>적은 수량</b>을 사서 평균 매수가가 자연스럽게 낮아집니다</li><li>"지금 사도 될까?" 하는 <b>타이밍 스트레스</b>가 사라져요</li><li>월급쟁이에게 가장 현실적인 투자법</li></ul><div class="callout tip">💡 증권사 앱의 <b>월 자동매수</b> 기능을 켜두면 자동으로 굴러가요.</div>`,
+        quiz: { q: "적립식 투자(DCA)의 핵심 효과는?", opts: ["저점에 한 번에 매수해 수익 극대화", "매수 타이밍을 분산해 평균 매수단가를 낮춤", "원금 손실을 막아줌"], answer: 1, explain: "DCA는 시간을 분산하는 전략이에요. 한 번에 큰 돈을 넣을 때보다 평균 단가가 안정적으로 형성됩니다." }
+      },
+      {
+        id: "s5", title: "주가지표 기본 — PER, PBR, 배당수익률",
+        lead: "주식이 비싼지 싼지 가늠하는 잣대.",
+        body: `<h4>PER (주가수익비율)</h4><p>주가가 1주당 순이익의 몇 배인가? <b>낮을수록 저평가</b>로 간주합니다.</p><div class="formula">PER = 주가 ÷ 주당순이익(EPS)</div><p>예: 주가 10,000원, EPS 1,000원이면 PER = 10배 → 10년치 이익을 낼 만큼 가격이 책정된 셈.</p><h4>PBR (주가순자산비율)</h4><p>주가가 회사 장부가치(자산-부채)의 몇 배인가? 1배 미만이면 청산가치보다 싸다는 뜻.</p><h4>배당수익률</h4><div class="formula">배당수익률 = 연 배당금 ÷ 주가 × 100</div><p>은행 예금처럼 매년 배당을 받는 비율. 통신주·금융주가 대체로 높아요.</p><div class="callout warn">⚠️ 지표만 보고 투자하면 안 돼요. 산업 특성, 성장성, 부채비율도 함께 봐야 합니다.</div>`,
+        quiz: { q: "주가가 8,000원, EPS가 1,000원이면 PER은?", opts: ["0.8배", "8배", "80배"], answer: 1, explain: "8,000 ÷ 1,000 = 8배. 8년치 이익만큼 가격이 책정된 셈입니다." }
+      },
+      {
+        id: "s6", title: "초보가 피해야 할 함정 5가지",
+        lead: "잃지 않는 것이 가장 빠르게 버는 길.",
+        body: `<ul><li><b>① 빚투(레버리지)</b> — 신용·미수·코인 마진은 반대 방향이면 0원이 됩니다</li><li><b>② 테마주·작전주</b> — '소문에 사서 뉴스에 팔라'는 말의 함정</li><li><b>③ 단타 + 잦은 매매</b> — 수수료·세금만 쌓이고 수익은 줄어듦</li><li><b>④ 한 종목 몰빵</b> — 회사 하나 망하면 자산도 함께 사라짐</li><li><b>⑤ 유튜브·리딩방 추천만 믿기</b> — 그들의 수익은 당신의 매수에서 나옵니다</li></ul><div class="callout tip">💡 워런 버핏의 <b>제1원칙: 돈을 잃지 마라.</b> 제2원칙: 제1원칙을 잊지 마라.</div>`,
+        quiz: { q: "다음 중 가장 위험한 행동은?", opts: ["월급의 20%를 ETF에 적립식 투자", "신용대출 받아 단일 종목에 몰빵", "1년에 한 번 포트폴리오 점검"], answer: 1, explain: "레버리지 + 단일 종목 몰빵은 가장 위험한 조합입니다." }
+      }
+    ]
+  },
+  {
+    id: "realestate", title: "부동산", icon: "🏠", iconClass: "amber",
+    desc: "전월세, 청약, LTV·DTI·DSR",
+    lessons: [
+      {
+        id: "r1", title: "전세 vs 월세 vs 매매",
+        lead: "내 상황에 맞는 주거 형태 고르기.",
+        body: `<h4>월세</h4><p>매달 월세 + 보증금 소액. 단기 거주, 직장 따라 이동하는 사람에게 적합. 주거비가 매달 지출되어 자산 축적은 어려움.</p><h4>전세</h4><p>큰 보증금을 맡기고 월세 없음. 한국 특유 제도. 금리가 낮을 땐 유리, 높을 땐 전세대출 이자가 부담될 수 있음.</p><h4>매매</h4><p>집을 직접 소유. 시세 상승 시 자산 증가, 하락 시 손실. <b>주택담보대출(주담대)</b>을 활용하는 경우가 일반적.</p><div class="callout warn">⚠️ <b>전세 사기 주의</b> — 등기부등본·건축물대장·확정일자 필수 체크. 보증보험(HUG, SGI) 가입 가능 여부 확인.</div>`,
+        quiz: { q: "전세 계약 시 가장 먼저 확인해야 할 것은?", opts: ["인테리어 상태", "등기부등본의 근저당·소유자", "주변 카페 유무"], answer: 1, explain: "근저당이 시세보다 많이 잡혀있으면 보증금을 떼일 수 있어요. 항상 등기부등본부터 확인." }
+      },
+      {
+        id: "r2", title: "LTV·DTI·DSR — 대출 한도 3대 규제",
+        lead: "이 세 글자만 알아도 대출 상담이 쉬워집니다.",
+        body: `<div class="callout year">📅 한국의 LTV/DSR 규제는 <b>지역(규제지역 여부)·실수요 여부·정부 정책</b>에 따라 자주 바뀝니다. 아래 수치는 일반적인 예시이고, 실제 한도는 은행에서 확인하세요.</div><h4>LTV (담보인정비율)</h4><p>집값 대비 대출 한도 비율. LTV 70%면 5억짜리 집에 최대 3.5억 대출.</p><div class="formula">대출한도 = 집값 × LTV (%)</div><h4>DTI (총부채상환비율)</h4><p>연소득 대비 <b>주택대출 원리금</b> 비율. DTI 40%면 연봉 6,000만원인 사람은 연 2,400만원까지 원리금 상환 가능.</p><h4>DSR (총부채원리금상환비율)</h4><p>연소득 대비 <b>모든 대출(신용·자동차 포함) 원리금</b> 비율. 현재 한국에서 가장 강력한 규제. 보통 40% 이내(은행) / 50% 이내(2금융권).</p><div class="callout">💡 <b>DSR이 가장 빡빡합니다.</b> 다른 대출이 많으면 주담대 한도가 확 줄어요.</div><div class="callout warn">⚠️ <b>대출은 자산이 아닌 부채예요.</b> 한도가 나온다고 다 빌리면 안 됩니다. 금리 인상기엔 매월 갚아야 할 돈이 늘어나 가계가 휘청일 수 있어요.</div>`,
+        quiz: { q: "다른 대출들까지 모두 합쳐 연소득 대비 원리금 상환 비율을 보는 규제는?", opts: ["LTV", "DTI", "DSR"], answer: 2, explain: "DSR은 모든 대출의 원리금을 합산해 봅니다. 가장 포괄적이고 강력한 규제예요." }
+      },
+      {
+        id: "r3", title: "청약 — 새 아파트 분양 받기",
+        lead: "한국에서 첫 집을 마련하는 가장 일반적인 길.",
+        body: `<div class="callout year">📅 청약 제도는 자주 개정됩니다. 2024년 11월부터 청약통장 월 인정한도가 <b>10만원 → 25만원</b>으로 41년 만에 상향됐어요.</div><p><b>주택청약종합저축</b>에 가입하고 <b>가점제·추첨제</b>를 통해 분양 아파트를 받는 제도예요.</p><h4>꼭 알아둘 것</h4><ul><li><b>청약통장</b>은 가능한 한 일찍 만들어 매달 납입 (2024년 11월부터 <b>월 25만원까지 인정</b>)</li><li>가점은 <b>무주택기간 + 부양가족 + 청약통장 가입기간</b>으로 계산 (최대 84점)</li><li>특별공급(신혼부부·생애최초·다자녀 등)도 함께 노려보기</li></ul><div class="callout tip">💡 청약 가점이 낮아도 <b>추첨제</b>·<b>무순위 청약(줍줍)</b> 기회가 있으니 청약통장은 꼭 만들어두세요.</div>`,
+        quiz: { q: "2024년 11월부터 변경된 청약통장 월 인정한도는?", opts: ["10만원", "25만원", "50만원"], answer: 1, explain: "오랫동안 10만원이었지만 2024년 11월부터 25만원으로 상향됐어요. 가점·소득공제 모두 25만원 기준으로 계산됩니다." }
+      },
+      {
+        id: "r4", title: "주담대 금리 — 고정 vs 변동, 원리금 vs 원금",
+        lead: "수억 원 빌리는데, 구조를 모르면 안 돼요.",
+        body: `<h4>금리 종류</h4><ul><li><b>고정금리</b> — 약정 기간 동안 금리 동일. 안정적</li><li><b>변동금리</b> — 시장 금리에 따라 변동. 금리 하락기엔 유리, 상승기엔 부담</li><li><b>혼합형</b> — 처음 5년 고정 → 이후 변동 (가장 많이 선택)</li></ul><h4>상환 방식</h4><ul><li><b>원리금균등</b> — 매달 같은 금액. 처음엔 이자 비중 큼, 나중에 원금 비중 커짐</li><li><b>원금균등</b> — 원금을 똑같이 나눠 갚음. 초반 부담 크지만 총이자 더 적음</li><li><b>체증식</b> — 갚는 금액이 점점 늘어남 (소득이 늘어날 사회초년생용)</li></ul><div class="callout">💡 30년 3억 대출을 가정하면 상환방식·금리에 따라 <b>총이자가 수천만원 차이</b> 납니다.</div>`,
+        quiz: { q: "금리 상승기에 차주(돈 빌린 사람)에게 가장 안정적인 선택은?", opts: ["변동금리", "고정금리", "차이 없다"], answer: 1, explain: "금리가 오르면 변동금리는 이자 부담이 늘어요. 고정금리는 약정 기간 내내 금리가 동일해 안정적입니다." }
+      },
+      {
+        id: "r5", title: "보증금 지키기 — 전세 사기 방지 체크리스트",
+        lead: "전 재산이 들어가는 보증금, 절대 잃으면 안 돼요.",
+        body: `<h4>계약 전</h4><ul><li>등기부등본 발급 → <b>근저당·가압류·신탁 여부</b> 확인</li><li>건축물대장 → 위반건축물 여부 확인</li><li>시세 대비 <b>전세가율 80% 이상</b>이면 위험 신호</li><li>집주인 신분증과 등기부 소유자 일치 확인</li></ul><h4>계약 직후</h4><ul><li>전입신고 + <b>확정일자</b> 받기 (주민센터)</li><li>가능하면 <b>전세보증금반환보증</b> 가입 (HUG, SGI)</li></ul><div class="callout warn">⚠️ "전세금 깎아줄 테니 시세보다 높게 계약서 쓰자"는 제안은 <b>전세 사기의 전형적인 수법</b>이에요. 절대 응하지 마세요.</div>`,
+        quiz: { q: "전세 계약 후 가장 먼저 해야 할 안전조치는?", opts: ["인테리어 사진 촬영", "전입신고 + 확정일자", "이웃에게 인사"], answer: 1, explain: "전입신고 + 확정일자가 있어야 보증금 우선변제권이 생겨요. 이게 보증금을 지키는 첫 번째 보호막입니다." }
+      }
+    ]
+  },
+  {
+    id: "tax", title: "절세 / 연금", icon: "🛡️", iconClass: "violet",
+    desc: "연말정산, IRP, 연금저축, ISA",
+    lessons: [
+      {
+        id: "t1", title: "연말정산 — '13월의 월급'의 정체",
+        lead: "낸 세금을 돌려받거나, 더 내는 정산.",
+        body: `<div class="callout year">📅 <b>모든 절세 규정(한도·공제율)은 매년 세법 개정에 따라 바뀝니다.</b> 본 강의는 2026년 4월 기준이며, 실제 신고 전 국세청 홈택스에서 최신 정보를 확인하세요.</div><p>월급에서 미리 떼간 세금(원천징수)이 실제 내야 할 세금보다 많으면 환급, 적으면 추가 납부하는 게 <b>연말정산</b>이에요.</p><h4>핵심 개념 2가지</h4><ul><li><b>소득공제</b> — 과세 대상 소득 자체를 줄여줌 (예: 인적공제, 신용카드 공제)</li><li><b>세액공제</b> — 계산된 세금에서 직접 차감 (예: 연금저축, 의료비, 교육비)</li></ul><div class="callout tip">💡 같은 100만원이라도 <b>세액공제가 소득공제보다 보통 더 유리</b>해요. (소득세율 15% 구간이면 소득공제 100만원 = 15만원 절세, 세액공제 100만원 = 100만원 절세)</div>`,
+        quiz: { q: "다음 중 '세액공제'에 해당하는 것은?", opts: ["부양가족에 대한 인적공제", "연금저축 납입액", "신용카드 사용액 공제"], answer: 1, explain: "연금저축은 대표적인 세액공제 항목이에요. 인적공제·카드공제는 소득공제입니다." }
+      },
+      {
+        id: "t2", title: "연금저축 + IRP — 직장인 절세의 끝판왕",
+        lead: "노후도 챙기고 세금도 돌려받는 1석 2조.",
+        body: `<h4>한도와 세액공제율 (2026년 4월 기준)</h4><ul><li><b>연금저축</b> 단독: 연 600만원 한도</li><li><b>연금저축 + IRP 합산</b>: 연 900만원 한도</li><li>총급여 5,500만원 이하: <b>16.5%</b> 세액공제 (900만원 → 148.5만원 환급)</li><li>총급여 5,500만원 초과: <b>13.2%</b> 세액공제 (900만원 → 118.8만원 환급)</li></ul><h4>주의점</h4><ul><li>만 55세 이전 중도해지 시 <b>기타소득세 16.5%</b> 부과 (사실상 환급액 토해냄)</li><li>장기 자금에만 사용. 비상금·단기자금은 절대 NO</li></ul><div class="callout">💡 IRP 안에서 ETF·펀드·예금 모두 운용 가능. <b>증권사 IRP</b>가 선택지가 가장 다양해요.</div>`,
+        quiz: { q: "연금저축+IRP의 연간 세액공제 한도는 합산 얼마?", opts: ["400만원", "700만원", "900만원"], answer: 2, explain: "둘 다 활용하면 합산 900만원까지 세액공제 받을 수 있어요. (2026년 4월 기준)" }
+      },
+      {
+        id: "t3", title: "ISA — 만능 절세통장",
+        lead: "주식·펀드·예금 다 담을 수 있는 절세 박스.",
+        body: `<p><b>ISA(개인종합자산관리계좌)</b>는 한 통장 안에서 여러 자산을 굴리고, <b>발생한 수익에 대해 세제혜택</b>을 받는 계좌예요.</p><h4>혜택 (2026년 4월 기준)</h4><ul><li>일반형: 수익 200만원까지 비과세, 초과분은 9.9% 분리과세</li><li>서민형(총급여 5,000만원 이하): 비과세 한도 400만원</li><li>연 납입한도 2,000만원 (5년 누적 1억까지)</li></ul><div class="callout year">📅 ISA 납입한도는 <b>연 4,000만원·누적 2억</b>으로 확대 추진 중인 단계입니다. 가입 전 최신 한도를 확인하세요.</div><h4>유형</h4><ul><li><b>중개형</b> — 주식·ETF 직접 매매 (가장 인기)</li><li><b>일임형</b> — 증권사가 알아서 운용</li><li><b>신탁형</b> — 예적금·펀드 위주</li></ul><div class="callout tip">💡 의무가입기간 <b>3년</b>. 만기 후 자유 해지 가능, 연금계좌로 이전하면 추가 절세도 가능.</div>`,
+        quiz: { q: "ISA의 가장 큰 매력은?", opts: ["원금이 보장된다", "투자 수익에 대한 세금 부담을 줄여준다", "연 5% 이자가 보장된다"], answer: 1, explain: "ISA는 '절세 박스'예요. 원금 보장이 아니라, 수익이 났을 때 세금을 적게 내게 해주는 제도입니다." }
+      },
+      {
+        id: "t4", title: "신용카드 vs 체크카드 공제",
+        lead: "총 급여의 25% 넘게 써야 공제가 시작돼요.",
+        body: `<p>연간 카드 사용액이 <b>총급여의 25%</b>를 초과해야, 그 초과분에 대해 공제율을 적용해요.</p><h4>공제율</h4><ul><li><b>신용카드</b>: 15%</li><li><b>체크카드 / 현금영수증</b>: 30%</li><li><b>전통시장 / 대중교통</b>: 40%</li></ul><h4>공제 한도 (2026년 4월 기준)</h4><ul><li>총급여 <b>7,000만원 이하</b>: 연 <b>300만원</b></li><li>총급여 <b>7,000만원 초과</b>: 연 <b>250만원</b></li></ul><div class="callout">💡 전략: 연 급여의 25%까지는 <b>혜택 좋은 신용카드</b>로, 초과분부터는 <b>체크카드</b>로 — 그래야 공제율을 극대화할 수 있어요.</div>`,
+        quiz: { q: "총급여의 25%까지는 어떤 카드를 쓰는 게 유리?", opts: ["체크카드 (공제율 높으니)", "신용카드 (혜택 좋으니)", "현금만"], answer: 1, explain: "어차피 25%까진 공제가 안 들어가니 혜택·할인이 좋은 신용카드를 쓰고, 초과분부터 공제율 높은 체크카드로 갈아타는 게 유리해요." }
+      },
+      {
+        id: "t5", title: "주택청약 + 월세 공제",
+        lead: "사회초년생이 놓치기 쉬운 작은 환급들.",
+        body: `<div class="callout year">📅 2025년부터 청약저축 소득공제 한도가 <b>240 → 300만원</b>, 월세 세액공제 한도가 <b>750 → 1,000만원</b>으로 확대됐어요.</div><h4>주택청약저축 소득공제 (2026년 4월 기준)</h4><ul><li>총급여 7,000만원 이하 무주택 세대주</li><li>연 납입액의 40% 소득공제</li><li>한도: 연 납입 <b>300만원</b>까지 (40% 공제 시 최대 120만원 소득공제)</li></ul><h4>월세 세액공제 (2026년 4월 기준)</h4><ul><li>총급여 8,000만원 이하 무주택 세대주</li><li>총급여 5,500만원 이하: <b>17%</b> 세액공제</li><li>총급여 5,500만원 초과 8,000만원 이하: <b>15%</b> 세액공제</li><li>한도: 연 <b>1,000만원</b>까지 월세에 대해 공제</li><li>월 50만원 월세면 연 90~102만원 가량 환급 가능</li></ul><div class="callout warn">⚠️ 월세 공제는 <b>전입신고 + 임대차계약서</b>가 필수. 집주인 동의 없이도 신청 가능합니다.</div>`,
+        quiz: { q: "월세 세액공제의 필수 조건이 아닌 것은?", opts: ["무주택 세대주", "전입신고 완료", "집주인의 사전 동의"], answer: 2, explain: "월세 공제는 집주인 동의 없이 가능해요. 단 전입신고와 계약서는 반드시 있어야 합니다." }
+      }
+    ]
+  }
+];
+
+const GLOSSARY = [
+  { name: "복리", ko: "Compound Interest", def: "이자에 또 이자가 붙는 구조. 시간이 길수록 효과가 폭발적." },
+  { name: "ETF", ko: "Exchange Traded Fund", def: "여러 종목을 묶어 주식처럼 거래되는 펀드. 자동 분산투자." },
+  { name: "PER", ko: "Price Earnings Ratio", def: "주가 / 주당순이익. 낮을수록 저평가로 간주." },
+  { name: "PBR", ko: "Price Book Ratio", def: "주가 / 주당순자산. 1배 미만은 청산가치 이하." },
+  { name: "DCA", ko: "적립식 투자", def: "매달 일정 금액을 꾸준히 매수하는 전략. 평균 단가 안정화." },
+  { name: "LTV", ko: "Loan To Value", def: "집값 대비 대출 한도 비율." },
+  { name: "DTI", ko: "Debt To Income", def: "연소득 대비 주택대출 원리금 비율." },
+  { name: "DSR", ko: "Debt Service Ratio", def: "연소득 대비 모든 대출 원리금 비율. 가장 강력한 규제." },
+  { name: "전세가율", ko: "전세금 / 매매가", def: "80% 이상이면 깡통전세 위험 신호." },
+  { name: "IRP", ko: "Individual Retirement Pension", def: "개인이 만드는 노후연금 계좌. 세액공제 핵심." },
+  { name: "ISA", ko: "Individual Savings Account", def: "여러 자산을 한 계좌에서 굴리며 세제혜택을 받는 통장." },
+  { name: "원천징수", ko: "Withholding Tax", def: "월급 줄 때 회사가 미리 떼고 내는 세금." },
+  { name: "세액공제", ko: "Tax Credit", def: "계산된 세금에서 직접 차감. 보통 소득공제보다 유리." },
+  { name: "소득공제", ko: "Income Deduction", def: "과세 대상 소득 자체를 줄여줌." },
+  { name: "기준금리", ko: "Base Rate", def: "한국은행이 정하는 정책금리. 모든 금리의 출발점." },
+  { name: "인플레이션", ko: "Inflation", def: "물가 상승. 같은 돈으로 살 수 있는 물건이 줄어드는 현상." },
+  { name: "디플레이션", ko: "Deflation", def: "물가 하락. 경제 활동 위축의 신호일 수 있음." },
+  { name: "명목 수익률", ko: "Nominal Return", def: "물가 변동을 고려하지 않은 표면 수익률." },
+  { name: "실질 수익률", ko: "Real Return", def: "명목 수익률에서 인플레이션을 뺀 실제 구매력 증가율." },
+  { name: "채권", ko: "Bond", def: "정부·회사에 돈을 빌려주고 정해진 이자를 받는 상품." },
+  { name: "국채", ko: "Treasury Bond", def: "정부가 발행하는 채권. 가장 안전한 자산 중 하나." },
+  { name: "회사채", ko: "Corporate Bond", def: "기업이 발행하는 채권. 신용등급에 따라 위험·수익률 다름." },
+  { name: "분산투자", ko: "Diversification", def: "위험을 여러 자산에 나누어 충격을 완화." },
+  { name: "리스크 프리미엄", ko: "Risk Premium", def: "위험을 감수한 대가로 기대하는 추가 수익률." },
+  { name: "리밸런싱", ko: "Rebalancing", def: "목표 비중에서 벗어난 포트폴리오를 주기적으로 조정." },
+  { name: "위험 감내력", ko: "Risk Tolerance", def: "투자 손실을 견딜 수 있는 심리적·재무적 능력." },
+  { name: "자산배분", ko: "Asset Allocation", def: "주식·채권·현금 등 자산군별 비중 결정. 수익의 90%를 좌우한다고도 함." },
+  { name: "파킹통장", ko: "Parking Account", def: "수시 입출금 가능하면서 일반 입출금보다 높은 이자를 주는 통장." },
+  { name: "CMA", ko: "Cash Management Account", def: "증권사 종합자산관리계좌. 수시 입출금 + RP 등으로 이자 수익." }
+];
+
+const CURRICULUM = [
+  ...MODULES.find(m => m.id === "personal").lessons.map(l => ({ ...l, modId: "personal" })),
+  ...MODULES.find(m => m.id === "tax").lessons.map(l => ({ ...l, modId: "tax" })),
+  ...MODULES.find(m => m.id === "stocks").lessons.map(l => ({ ...l, modId: "stocks" })),
+  ...MODULES.find(m => m.id === "realestate").lessons.map(l => ({ ...l, modId: "realestate" }))
+];
+
+const BADGES = [
+  { id: "first_step", label: "첫걸음", check: s => s.completed.size >= 1 },
+  { id: "week1", label: "1주 완주", check: s => s.completed.size >= 7 },
+  { id: "personal_master", label: "재무 마스터", check: s => moduleProgress("personal", s) === 1 },
+  { id: "tax_master", label: "절세 마스터", check: s => moduleProgress("tax", s) === 1 },
+  { id: "stock_master", label: "투자 마스터", check: s => moduleProgress("stocks", s) === 1 },
+  { id: "real_master", label: "부동산 마스터", check: s => moduleProgress("realestate", s) === 1 },
+  { id: "all_master", label: "🏆 자산증식 졸업", check: s => totalLessons() === s.completed.size }
+];
+
+const memStore = {};
+const storage = {
+  get(k, def) { try { const v = localStorage.getItem("mb_" + k); return v === null ? def : JSON.parse(v); } catch { return memStore[k] === undefined ? def : memStore[k]; } },
+  set(k, v) { try { localStorage.setItem("mb_" + k, JSON.stringify(v)); } catch { memStore[k] = v; } }
+};
+
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const daysBetween = (a, b) => Math.floor((new Date(b) - new Date(a)) / (1000 * 60 * 60 * 24));
+
+const state = {
+  tab: "home",
+  view: { type: "home" },
+  completed: new Set(storage.get("completed", [])),
+  startDate: storage.get("startDate", null),
+  pace: storage.get("pace", 1)
+};
+
+function saveState() {
+  storage.set("completed", Array.from(state.completed));
+  storage.set("startDate", state.startDate);
+  storage.set("pace", state.pace);
+}
+
+function ensureStartDate() {
+  if (!state.startDate) { state.startDate = todayStr(); saveState(); }
+}
+
+function totalLessons() { return CURRICULUM.length; }
+function totalDays() { return Math.ceil(totalLessons() / state.pace); }
+function currentDayNumber() {
+  ensureStartDate();
+  const d = daysBetween(state.startDate, todayStr()) + 1;
+  return Math.max(1, Math.min(d, totalDays()));
+}
+function lessonsForDay(day) {
+  const start = (day - 1) * state.pace;
+  return CURRICULUM.slice(start, start + state.pace);
+}
+function todaysLessons() { return lessonsForDay(currentDayNumber()); }
+function todayDoneCount() { return todaysLessons().filter(l => state.completed.has(l.id)).length; }
+function isTodayComplete() { const t = todaysLessons(); return t.length > 0 && t.every(l => state.completed.has(l.id)); }
+function isCourseComplete() { return state.completed.size === totalLessons(); }
+function lessonDayNumber(lessonId) {
+  const idx = CURRICULUM.findIndex(l => l.id === lessonId);
+  if (idx < 0) return null;
+  return Math.floor(idx / state.pace) + 1;
+}
+function moduleProgress(modId, s = state) {
+  const m = MODULES.find(x => x.id === modId);
+  if (!m) return 0;
+  const done = m.lessons.filter(l => s.completed.has(l.id)).length;
+  return done / m.lessons.length;
+}
+function unlockedBadges() { return BADGES.filter(b => b.check(state)); }
+function levelInfo() {
+  const ratio = state.completed.size / totalLessons();
+  if (ratio >= 1) return { lv: 5, name: "Lv.5 자산증식 마스터", short: "🏆 마스터" };
+  if (ratio >= 0.7) return { lv: 4, name: "Lv.4 실전형", short: "고수 Lv.4" };
+  if (ratio >= 0.4) return { lv: 3, name: "Lv.3 중급", short: "중급 Lv.3" };
+  if (ratio >= 0.15) return { lv: 2, name: "Lv.2 입문 졸업", short: "입문 Lv.2" };
+  return { lv: 1, name: "Lv.1 입문", short: "초보 Lv.1" };
+}
+
+const view = document.getElementById("view");
+const tabs = document.getElementById("tabs");
+
+tabs.addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]");
+  if (!b) return;
+  state.tab = b.dataset.tab;
+  state.view = { type: state.tab === "home" ? "home" : state.tab };
+  render();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("진행상황과 시작일을 모두 초기화할까요?")) {
+    state.completed.clear();
+    state.startDate = null;
+    state.pace = 1;
+    saveState();
+    render();
+  }
+});
+
+function renderTodayCard() {
+  ensureStartDate();
+  const day = currentDayNumber();
+  const total = totalDays();
+  const lessons = todaysLessons();
+  const done = isTodayComplete();
+  const courseDone = isCourseComplete();
+  const card = document.createElement("div");
+  card.className = "today-card" + (courseDone ? " completed" : (done ? " done" : ""));
+  if (courseDone) {
+    card.innerHTML = `<div class="row1"><span class="label">🎓 코스 완주</span><span class="day-pill">Day ${total} / ${total}</span></div><h2>모든 레슨을 마쳤어요!</h2><div class="sub">이제 '도구' 탭에서 시뮬레이션을 돌려보거나, 마음 가는 레슨을 다시 복습해보세요.</div>`;
+    return card;
+  }
+  const itemsHtml = lessons.map(l => {
+    const isDone = state.completed.has(l.id);
+    return `<div class="today-item ${isDone ? "done" : ""}" data-lesson="${l.id}" data-mod="${l.modId}"><div class="check">${isDone ? "✓" : ""}</div><span>${l.title}</span></div>`;
+  }).join("");
+  if (done) {
+    card.innerHTML = `<div class="row1"><span class="label">🎉 오늘 학습 완료</span><span class="day-pill">Day ${day} / ${total}</span></div><h2>잘했어요! 내일 또 만나요</h2><div class="sub">하루에 ${state.pace}강씩, 지금 페이스라면 ${total - day}일 후 코스 완주!</div><div class="today-list">${itemsHtml}</div>`;
+  } else {
+    card.innerHTML = `<div class="row1"><span class="label">🌅 오늘의 학습</span><span class="day-pill">Day ${day} / ${total}</span></div><h2>${todayDoneCount()}/${lessons.length} 강 완료</h2><div class="sub">오늘 ${state.pace}강만 끝내면 충분해요. 짧고 굵게!</div><div class="today-list">${itemsHtml}</div><button class="today-cta" id="todayStart">${todayDoneCount() > 0 ? "이어서 학습하기" : "오늘 학습 시작"} →</button>`;
+  }
+  card.querySelectorAll(".today-item").forEach(el => {
+    el.addEventListener("click", () => {
+      state.tab = "learn";
+      state.view = { type: "lesson", modId: el.dataset.mod, lessonId: el.dataset.lesson };
+      render();
+    });
+  });
+  const cta = card.querySelector("#todayStart");
+  if (cta) {
+    cta.addEventListener("click", () => {
+      const next = lessons.find(l => !state.completed.has(l.id)) || lessons[0];
+      state.tab = "learn";
+      state.view = { type: "lesson", modId: next.modId, lessonId: next.id };
+      render();
+    });
+  }
+  return card;
+}
+
+function renderPaceStrip() {
+  const day = currentDayNumber();
+  const total = totalDays();
+  const remainingDays = isTodayComplete() ? total - day : (total - day + 1);
+  const strip = document.createElement("div");
+  strip.className = "pace-strip";
+  strip.innerHTML = `<div class="info">📅 <b>하루 ${state.pace}강</b> · 총 <b>${total}일 코스</b> · 남은 일수 <b>${Math.max(0, remainingDays)}일</b></div><div class="pace-segs" id="paceSegs"><button data-pace="1" class="${state.pace===1?"active":""}">1강/일</button><button data-pace="2" class="${state.pace===2?"active":""}">2강/일</button><button data-pace="3" class="${state.pace===3?"active":""}">3강/일</button></div>`;
+  strip.querySelectorAll("[data-pace]").forEach(b => {
+    b.addEventListener("click", () => {
+      state.pace = parseInt(b.dataset.pace);
+      saveState();
+      render();
+    });
+  });
+  return strip;
+}
+
+function renderProgressCard() {
+  const card = document.createElement("section");
+  card.className = "progress-card";
+  const total = totalLessons();
+  const done = state.completed.size;
+  const pct = Math.round(done / total * 100);
+  const lv = levelInfo();
+  const badges = unlockedBadges();
+  card.innerHTML = `<div class="row"><div><h2>전체 진행률</h2><div class="muted">${done === total ? "🎉 모든 레슨 완료!" : `${total - done}개 레슨 남았어요`}</div></div><div class="pct">${pct}%</div></div><div class="bar"><span style="width:${pct}%"></span></div><div class="stats-row"><div class="stat"><div class="lbl">완료</div><div class="val">${done}/${total}</div></div><div class="stat"><div class="lbl">현재 일차</div><div class="val">Day ${currentDayNumber()}</div></div><div class="stat"><div class="lbl">레벨</div><div class="val">${lv.short.split(" ")[1] || "Lv.1"}</div></div><div class="stat"><div class="lbl">뱃지</div><div class="val">${badges.length}/${BADGES.length}</div></div></div><div class="badge-row">${BADGES.map(b => `<span class="badge ${badges.includes(b)?"unlocked":""}">${badges.includes(b)?"✨ ":"🔒 "}${b.label}</span>`).join("")}</div>`;
+  document.getElementById("levelPill").textContent = lv.short;
+  return card;
+}
+
+function renderHome() {
+  view.innerHTML = "";
+  view.appendChild(renderTodayCard());
+  view.appendChild(renderPaceStrip());
+  view.appendChild(renderProgressCard());
+  const title = document.createElement("h3");
+  title.className = "section-title";
+  title.textContent = "학습 분야 4가지";
+  view.appendChild(title);
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  view.appendChild(grid);
+  MODULES.forEach(m => {
+    const done = m.lessons.filter(l => state.completed.has(l.id)).length;
+    const ratio = done / m.lessons.length;
+    const card = document.createElement("button");
+    card.className = "module";
+    card.innerHTML = `<div class="icon ${m.iconClass}">${m.icon}</div><h3>${m.title}</h3><div class="desc">${m.desc}</div><div class="mini-bar"><span style="width:${ratio*100}%"></span></div><div class="meta"><span>${done} / ${m.lessons.length} 레슨</span><span>${Math.round(ratio*100)}%</span></div>`;
+    card.addEventListener("click", () => {
+      state.tab = "learn";
+      state.view = { type: "module", id: m.id };
+      render();
+    });
+    grid.appendChild(card);
+  });
+  const sched = document.createElement("div");
+  sched.className = "schedule";
+  const total = totalDays();
+  const today = currentDayNumber();
+  let cells = "";
+  for (let d = 1; d <= total; d++) {
+    const ls = lessonsForDay(d);
+    const allDone = ls.every(l => state.completed.has(l.id));
+    let cls = "day-cell";
+    if (allDone) cls += " done";
+    else if (d === today) cls += " today";
+    else if (d > today) cls += " future";
+    cells += `<div class="${cls}" data-day="${d}" title="Day ${d}"><span class="num">${d}</span><span class="dot">${allDone ? "✓" : (d === today ? "★" : "")}</span></div>`;
+  }
+  sched.innerHTML = `<h3>📅 ${total}일 커리큘럼</h3><div class="day-grid">${cells}</div><div style="font-size:11px; color:#8a8278; margin-top:10px;"><span style="color:#1f8e5a; font-weight:700;">●</span> 완료 &nbsp;&nbsp;<span style="color:#ff8a5b; font-weight:700;">●</span> 오늘 &nbsp;&nbsp;<span style="color:#b8b1a6; font-weight:700;">●</span> 예정</div>`;
+  sched.querySelectorAll("[data-day]").forEach(c => {
+    c.addEventListener("click", () => {
+      const d = parseInt(c.dataset.day);
+      const ls = lessonsForDay(d);
+      if (ls.length === 0) return;
+      const next = ls.find(l => !state.completed.has(l.id)) || ls[0];
+      state.tab = "learn";
+      state.view = { type: "lesson", modId: next.modId, lessonId: next.id };
+      render();
+    });
+  });
+  view.appendChild(sched);
+}
+
+function renderLearnIndex() {
+  view.innerHTML = "";
+  MODULES.forEach(m => {
+    const done = m.lessons.filter(l => state.completed.has(l.id)).length;
+    const ratio = done / m.lessons.length;
+    const card = document.createElement("div");
+    card.className = "lesson-list";
+    card.style.marginBottom = "12px";
+    card.innerHTML = `<div class="lesson-list-header" style="cursor:pointer;"><div style="display:flex;align-items:center;gap:10px;"><div class="icon ${m.iconClass}" style="width:34px;height:34px;font-size:16px;">${m.icon}</div><div><h3>${m.title}</h3><div style="font-size:12px;color:#8a8278;margin-top:2px;">${done}/${m.lessons.length} 레슨 · ${Math.round(ratio*100)}%</div></div></div><span class="back">›</span></div>`;
+    card.querySelector(".lesson-list-header").addEventListener("click", () => {
+      state.view = { type: "module", id: m.id };
+      render();
+    });
+    view.appendChild(card);
+  });
+}
+
+function renderModule(modId) {
+  const m = MODULES.find(x => x.id === modId);
+  const today = currentDayNumber();
+  view.innerHTML = `<div class="lesson-list"><div class="lesson-list-header"><h3>${m.icon} ${m.title}</h3><button class="back" id="backBtn">‹ 뒤로</button></div><div id="lessonList"></div></div>`;
+  document.getElementById("backBtn").addEventListener("click", () => {
+    state.view = { type: "learn" };
+    render();
+  });
+  const list = document.getElementById("lessonList");
+  m.lessons.forEach((l, i) => {
+    const done = state.completed.has(l.id);
+    const dayNum = lessonDayNumber(l.id);
+    let dayCls = "";
+    let dayLbl = `Day ${dayNum}`;
+    if (dayNum === today) { dayCls = "today"; dayLbl = `🌅 오늘`; }
+    else if (dayNum < today) dayCls = "past";
+    else dayCls = "future";
+    const el = document.createElement("div");
+    el.className = "lesson " + dayCls + (done ? " done" : "");
+    el.innerHTML = `<div class="num">${done ? "✓" : i + 1}</div><div class="title">${l.title}</div><span class="day-tag">${dayLbl}</span><div class="arrow">›</div>`;
+    el.addEventListener("click", () => {
+      state.view = { type: "lesson", modId: m.id, lessonId: l.id };
+      render();
+    });
+    list.appendChild(el);
+  });
+}
+
+function renderLesson(modId, lessonId) {
+  const m = MODULES.find(x => x.id === modId);
+  const lIdx = m.lessons.findIndex(x => x.id === lessonId);
+  const l = m.lessons[lIdx];
+  const done = state.completed.has(l.id);
+  const dayNum = lessonDayNumber(l.id);
+  const today = currentDayNumber();
+  let dayBadge = "";
+  if (dayNum === today) dayBadge = `<span style="background:#ff8a5b;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:6px;">🌅 오늘 분량</span>`;
+  else if (dayNum < today) dayBadge = `<span style="background:#e3edf8;color:#305892;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:6px;">Day ${dayNum} · 지난 학습</span>`;
+  else dayBadge = `<span style="background:#ece6f6;color:#5b48a0;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:6px;">Day ${dayNum} · 예정</span>`;
+  view.innerHTML = `<div class="lesson-detail"><div class="crumb">${m.title} · 레슨 ${lIdx + 1} / ${m.lessons.length} ${dayBadge}</div><h2>${l.title}</h2><div class="lead">${l.lead}</div><div class="body">${l.body}</div>${l.quiz ? `<div class="quiz"><div class="q">📝 퀴즈 · ${l.quiz.q}</div><div class="opts" id="opts"></div><div class="explain hidden" id="explain"></div></div>` : ""}<div class="check-row"><button class="btn ghost" id="prevBtn">‹ 목록</button>${lIdx > 0 ? `<button class="btn ghost" id="prevLessonBtn">이전</button>` : ""}<div style="flex:1;"></div><button class="btn ${done ? "success" : ""}" id="completeBtn">${done ? "✓ 완료됨" : "완료 표시"}</button>${lIdx < m.lessons.length - 1 ? `<button class="btn" id="nextLessonBtn">다음 ›</button>` : ""}</div></div>`;
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    state.view = { type: "module", id: modId };
+    render();
+  });
+  document.getElementById("completeBtn").addEventListener("click", () => {
+    if (state.completed.has(l.id)) state.completed.delete(l.id);
+    else state.completed.add(l.id);
+    saveState();
+    render();
+  });
+  if (lIdx < m.lessons.length - 1) {
+    document.getElementById("nextLessonBtn").addEventListener("click", () => {
+      state.completed.add(l.id);
+      saveState();
+      state.view = { type: "lesson", modId, lessonId: m.lessons[lIdx + 1].id };
+      render();
+    });
+  }
+  if (lIdx > 0) {
+    document.getElementById("prevLessonBtn").addEventListener("click", () => {
+      state.view = { type: "lesson", modId, lessonId: m.lessons[lIdx - 1].id };
+      render();
+    });
+  }
+  if (l.quiz) {
+    const opts = document.getElementById("opts");
+    l.quiz.opts.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.textContent = `${String.fromCharCode(65+i)}. ${o}`;
+      b.addEventListener("click", () => {
+        opts.querySelectorAll("button").forEach(x => x.disabled = true);
+        if (i === l.quiz.answer) b.classList.add("correct");
+        else { b.classList.add("wrong"); opts.children[l.quiz.answer].classList.add("correct"); }
+        const ex = document.getElementById("explain");
+        ex.textContent = "💡 " + l.quiz.explain;
+        ex.classList.remove("hidden");
+      });
+      opts.appendChild(b);
+    });
+  }
+}
+
+function renderTools() {
+  view.innerHTML = `<div class="tool-card"><h3>📈 복리 계산기</h3><div class="tdesc">매달 적립 + 연 수익률로 굴렸을 때 N년 후 자산은?</div><div class="field"><label>월 적립 금액 (만원)</label><input type="number" id="dca_monthly" value="50" /></div><div class="field"><label>연 기대 수익률 (%)</label><input type="number" id="dca_rate" value="7" step="0.1" /><span class="hint">수익률은 가정일 뿐 — S&P 500 장기 평균이 약 9~10%지만 매년 등락 큼</span></div><div class="field"><label>투자 기간 (년)</label><input type="number" id="dca_years" value="20" /></div><button class="btn" id="dcaBtn">계산하기</button><div class="result hidden" id="dcaResult"></div></div><div class="tool-card"><h3>⏱️ 72의 법칙 — 자산이 2배 되는 시간</h3><div class="tdesc">연 수익률만 알면, 원금이 두 배 되는 데 몇 년 걸릴지 빠르게 계산 (수익률 6~10%일 때 가장 정확).</div><div class="field"><label>연 수익률 (%)</label><input type="number" id="r72" value="6" step="0.1" /></div><button class="btn" id="r72Btn">계산하기</button><div class="result hidden" id="r72Result"></div></div><div class="tool-card"><h3>🏦 주담대 월 상환액 계산기</h3><div class="tdesc">원리금균등 상환 기준으로 매달 갚을 금액과 총이자를 계산.</div><div class="field"><label>대출 원금 (만원)</label><input type="number" id="loan_amt" value="30000" /></div><div class="field"><label>연 금리 (%)</label><input type="number" id="loan_rate" value="4" step="0.01" /></div><div class="field"><label>대출 기간 (년)</label><input type="number" id="loan_years" value="30" /></div><button class="btn" id="loanBtn">계산하기</button><div class="result hidden" id="loanResult"></div></div><div class="tool-card"><h3>💼 비상금 목표 계산기</h3><div class="tdesc">월 생활비 기준으로 권장 비상금 규모를 알려드려요.</div><div class="field"><label>월 생활비 (만원)</label><input type="number" id="ef_monthly" value="200" /></div><button class="btn" id="efBtn">계산하기</button><div class="result hidden" id="efResult"></div></div>`;
+  document.getElementById("dcaBtn").addEventListener("click", () => {
+    const m = +document.getElementById("dca_monthly").value;
+    const r = +document.getElementById("dca_rate").value / 100;
+    const y = +document.getElementById("dca_years").value;
+    const months = y * 12;
+    const rm = r / 12;
+    const fv = rm === 0 ? m * months : m * ((Math.pow(1 + rm, months) - 1) / rm) * (1 + rm);
+    const principal = m * months;
+    const profit = fv - principal;
+    const el = document.getElementById("dcaResult");
+    el.classList.remove("hidden");
+    el.innerHTML = `<div class="big">${formatMoney(fv)}만원</div><div class="small">원금 ${formatMoney(principal)}만원 + 수익 ${formatMoney(profit)}만원<br>${y}년 동안 매달 ${m}만원씩 연 ${(r*100).toFixed(1)}% 수익률 가정 (월복리)</div>`;
+  });
+  document.getElementById("r72Btn").addEventListener("click", () => {
+    const r = +document.getElementById("r72").value;
+    if (r <= 0) return;
+    const years = 72 / r;
+    const el = document.getElementById("r72Result");
+    el.classList.remove("hidden");
+    el.innerHTML = `<div class="big">약 ${years.toFixed(1)}년</div><div class="small">연 ${r}% 수익률이면 원금이 2배 되는 데 약 ${years.toFixed(1)}년 걸려요.<br>예: 1,000만원 → ${(years).toFixed(1)}년 후 2,000만원 (수익률 6~10% 구간에서 가장 정확)</div>`;
+  });
+  document.getElementById("loanBtn").addEventListener("click", () => {
+    const p = +document.getElementById("loan_amt").value;
+    const r = +document.getElementById("loan_rate").value / 100 / 12;
+    const n = +document.getElementById("loan_years").value * 12;
+    const pmt = r === 0 ? p / n : p * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+    const total = pmt * n;
+    const interest = total - p;
+    const el = document.getElementById("loanResult");
+    el.classList.remove("hidden");
+    el.innerHTML = `<div class="big">월 ${formatMoney(pmt)}만원</div><div class="small">총 상환액: ${formatMoney(total)}만원 (원금 ${formatMoney(p)} + 이자 ${formatMoney(interest)}만원)</div>`;
+  });
+  document.getElementById("efBtn").addEventListener("click", () => {
+    const m = +document.getElementById("ef_monthly").value;
+    const el = document.getElementById("efResult");
+    el.classList.remove("hidden");
+    el.innerHTML = `<div class="big">${formatMoney(m * 3)} ~ ${formatMoney(m * 6)}만원</div><div class="small">최소 3개월(${formatMoney(m*3)}만원) ~ 권장 6개월(${formatMoney(m*6)}만원).<br>파킹통장·CMA에 보관해 즉시 인출 가능하게 두세요.</div>`;
+  });
+}
+
+function formatMoney(n) { return Math.round(n).toLocaleString("ko-KR"); }
+
+function renderGlossary() {
+  view.innerHTML = `<input class="search" id="termSearch" placeholder="🔍 용어 검색 (예: 복리, ETF, DSR)" /><div id="termList"></div>`;
+  const list = document.getElementById("termList");
+  function paint(filter = "") {
+    list.innerHTML = "";
+    const f = filter.trim().toLowerCase();
+    const filtered = GLOSSARY.filter(t => !f || t.name.toLowerCase().includes(f) || t.ko.toLowerCase().includes(f) || t.def.toLowerCase().includes(f));
+    if (filtered.length === 0) { list.innerHTML = '<div class="empty">검색 결과가 없어요</div>'; return; }
+    filtered.sort((a,b) => a.name.localeCompare(b.name, "ko"));
+    filtered.forEach(t => {
+      const el = document.createElement("div");
+      el.className = "term";
+      el.innerHTML = `<div class="name">${t.name}<span class="ko">${t.ko}</span></div><div class="def">${t.def}</div>`;
+      list.appendChild(el);
+    });
+  }
+  paint();
+  document.getElementById("termSearch").addEventListener("input", e => paint(e.target.value));
+}
+
+function render() {
+  Array.from(tabs.children).forEach(b => b.classList.toggle("active", b.dataset.tab === state.tab));
+  if (state.view.type === "home") renderHome();
+  else if (state.view.type === "learn") renderLearnIndex();
+  else if (state.view.type === "module") renderModule(state.view.id);
+  else if (state.view.type === "lesson") renderLesson(state.view.modId, state.view.lessonId);
+  else if (state.view.type === "tools") renderTools();
+  else if (state.view.type === "glossary") renderGlossary();
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+render();
+</script>
+</body>
+</html>
