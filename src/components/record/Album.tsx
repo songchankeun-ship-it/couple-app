@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
-import { Plus } from 'lucide-react'
+import { Plus, Trash2, X } from 'lucide-react'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 export default function Album() {
   const { data, updateData } = useFirebase()
@@ -39,65 +40,63 @@ export default function Album() {
     setViewIdx(null)
   }
 
+  const photos = [...data.album].reverse()
+
   return (
-    <div className="px-4 pb-24">
-      {data.album.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center justify-center py-20"
+    <div className="px-4 pb-24 pt-2">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-lg font-bold text-text-primary" style={{ fontFamily: 'var(--font-serif)' }}>앨범</h2>
+          <p className="text-[11px] text-text-muted mt-0.5">{data.album.length}장의 사진</p>
+        </div>
+        <motion.button
+          onClick={addPhoto}
+          whileTap={{ scale: 0.9 }}
+          className="w-10 h-10 rounded-2xl bg-primary/10 border border-primary/15 flex items-center justify-center text-primary"
         >
-          <motion.span
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="text-5xl mb-4"
-          >🖼️</motion.span>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">아직 사진이 없어요</h3>
-          <p className="text-sm text-gray-400 mb-4">우리의 소중한 순간을 남겨보세요</p>
-          <motion.button
-            onClick={addPhoto}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm shadow-[0_2px_8px_rgba(242,160,181,0.2)] btn-glow"
-          >
-            첫 사진 추가
-          </motion.button>
-        </motion.div>
+          <Plus size={18} />
+        </motion.button>
+      </div>
+
+      {data.album.length === 0 ? (
+        <EmptyState
+          pose="camera"
+          title="아직 사진이 없어요"
+          subtitle="우리의 소중한 순간을 남겨보세요"
+          action={{ label: '첫 사진 추가', onClick: addPhoto }}
+          gender="couple"
+        />
       ) : (
-        <div className="grid grid-cols-3 gap-1.5 pt-3">
-          <motion.div
-            onClick={addPhoto}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.95 }}
-            className="aspect-square rounded-2xl bg-white/60 backdrop-blur-sm border border-white/50 flex flex-col items-center justify-center cursor-pointer gap-1 shadow-[0_2px_12px_rgba(167,139,250,0.08)]"
-          >
-            <Plus size={24} className="text-gray-400" />
-            <span className="text-[10px] font-bold text-gray-400">추가</span>
-          </motion.div>
-          {[...data.album].reverse().map((photo, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.03, type: 'spring' }}
-              onClick={() => setViewIdx(data.album.length - 1 - i)}
-              className="aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-[0_2px_12px_rgba(167,139,250,0.08)] relative group"
-            >
-              <motion.img
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                src={photo.src}
-                alt=""
-                className="w-full h-full object-cover"
-              />
-              {photo.date && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent pt-4 pb-1.5 px-2">
-                  <span className="text-[9px] font-semibold text-white/90">
-                    {photo.date.slice(5).replace('-', '.')}
-                  </span>
-                </div>
-              )}
-            </motion.div>
-          ))}
+        /* Masonry-style grid: alternating tall/short */
+        <div className="columns-2 gap-2.5 space-y-2.5">
+          {photos.map((photo, i) => {
+            const isTall = i % 3 === 0
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03, type: 'spring', stiffness: 200 }}
+                onClick={() => setViewIdx(data.album.length - 1 - i)}
+                className={`break-inside-avoid rounded-2xl overflow-hidden cursor-pointer relative group border border-border-light shadow-sm`}
+                style={{ aspectRatio: isTall ? '3/4' : '4/3' }}
+              >
+                <img
+                  src={photo.src}
+                  alt=""
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {photo.date && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent pt-6 pb-2 px-3">
+                    <span className="text-[9px] font-bold text-white/90 tracking-wide">
+                      {photo.date.slice(2).replace(/-/g, '.')}
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            )
+          })}
         </div>
       )}
 
@@ -112,42 +111,45 @@ export default function Album() {
             onClick={() => setViewIdx(null)}
           >
             <motion.img
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              exit={{ scale: 0.85, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 200 }}
               src={data.album[viewIdx].src}
               alt=""
-              className="max-w-full max-h-[70vh] rounded-2xl shadow-2xl"
+              className="max-w-full max-h-[70vh] rounded-2xl"
             />
             {data.album[viewIdx].date && (
-              <motion.div
+              <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="mt-4 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10"
+                className="mt-4 text-sm font-bold text-white/70"
+                style={{ fontFamily: 'var(--font-serif)' }}
               >
-                <span className="text-[13px] font-semibold text-white/80">
-                  📅 {data.album[viewIdx].date.replace(/-/g, '.')}
-                </span>
-              </motion.div>
+                {data.album[viewIdx].date.replace(/-/g, '.')}
+              </motion.p>
             )}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex gap-4 mt-4"
+              className="flex gap-3 mt-5"
             >
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); remove(viewIdx) }}
-                className="px-6 py-3 rounded-xl bg-red-500/80 text-white font-bold text-sm backdrop-blur-sm"
-              >삭제</motion.button>
+                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-red-500/20 text-red-300 font-bold text-sm border border-red-500/20"
+              >
+                <Trash2 size={14} /> 삭제
+              </motion.button>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setViewIdx(null)}
-                className="px-6 py-3 rounded-xl bg-white/20 text-white font-bold text-sm backdrop-blur-sm border border-white/20"
-              >닫기</motion.button>
+                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/10 text-white/80 font-bold text-sm border border-white/10"
+              >
+                <X size={14} /> 닫기
+              </motion.button>
             </motion.div>
           </motion.div>
         )}

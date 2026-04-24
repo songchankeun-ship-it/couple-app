@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus, Trash2, X, ImagePlus } from 'lucide-react'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 // ===== MEMORIES =====
 export function Memories() {
@@ -105,9 +106,7 @@ export function Memories() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16"
         >
-          <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">📸</motion.span>
-          <h3 className="text-base font-bold text-gray-800 mb-1">아직 추억이 없어요</h3>
-          <p className="text-sm text-gray-400">소중한 순간을 기록해보세요</p>
+          <EmptyState pose="think" title="아직 추억이 없어요" subtitle="소중한 순간을 기록해보세요" action={{ label: '추억 추가', onClick: () => setModal(true) }} />
         </motion.div>
       ) : (
         <div className="space-y-2">

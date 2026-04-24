@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus, Trash2 } from 'lucide-react'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 export default function Memos() {
   const { data, updateData } = useFirebase()
@@ -25,10 +26,7 @@ export default function Memos() {
     <div className="px-4 pb-24 animate-fade-in-up">
       {data.memos.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <span className="text-5xl mb-4 animate-bounce">💌</span>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">아직 편지가 없어요</h3>
-          <p className="text-sm text-gray-400 mb-4">마음을 담은 편지를 써보세요</p>
-          <button onClick={() => setModal(true)} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-light to-teal-dark text-white font-bold text-sm shadow-lg">첫 편지 쓰기</button>
+          <EmptyState pose="love" title="아직 편지가 없어요" subtitle="마음을 담은 편지를 써보세요" gender="girl" />
         </div>
       ) : (
         <div className="space-y-3">

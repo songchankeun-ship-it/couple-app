@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus, Star, Trash2, X } from 'lucide-react'
 import type { SpotItem } from '../../types/data'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 const SPOT_CATEGORIES = ['전체', '맛집', '카페', '술집', '여행', '데이트', '기타'] as const
 const SPOT_EMOJIS: Record<string, string> = {
@@ -124,13 +125,7 @@ export default function DateMap() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16"
         >
-          <motion.span
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="text-5xl mb-4"
-          >📍</motion.span>
-          <h3 className="text-base font-bold text-gray-800 mb-1">아직 장소가 없어요</h3>
-          <p className="text-sm text-gray-400">함께 다녀온 곳을 기록해보세요!</p>
+          <EmptyState pose="walk" title="아직 장소가 없어요" subtitle="함께 가고 싶은 곳을 추가해보세요" action={{ label: '장소 추가', onClick: () => setShowAdd(true) }} />
         </motion.div>
       ) : (
         <div className="space-y-2">

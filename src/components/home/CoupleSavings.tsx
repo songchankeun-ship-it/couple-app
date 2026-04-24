@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus, X, ChevronDown, ChevronUp, Pencil } from 'lucide-react'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 const GOAL_EMOJIS = ['🏠', '✈️', '💍', '🎁', '🚗', '📱', '🎓', '💰', '🐱', '🍽️']
 
@@ -164,9 +165,7 @@ export default function CoupleSavings() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16"
         >
-          <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">💰</motion.span>
-          <h3 className="text-base font-bold text-gray-800 mb-1">아직 저축 목표가 없어요</h3>
-          <p className="text-sm text-gray-400">함께 모을 목표를 세워보세요!</p>
+          <EmptyState pose="think" title="아직 저축 목표가 없어요" subtitle="함께 모을 목표를 만들어보세요" action={{ label: '목표 추가', onClick: () => setShowAdd(true) }} />
         </motion.div>
       ) : (
         <div className="space-y-3">

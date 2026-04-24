@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFirebase } from '../../contexts/FirebaseContext'
 import { Plus, X, Check, Star, Calendar } from 'lucide-react'
+import { EmptyState } from '../shared/CoupleCharacter'
 
 export default function CoupleTodo() {
   const { data, updateData } = useFirebase()
@@ -138,11 +139,7 @@ export default function CoupleTodo() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16"
         >
-          <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-5xl mb-4">✅</motion.span>
-          <h3 className="text-base font-bold text-gray-800 mb-1">
-            {totalCount === 0 ? '아직 할 일이 없어요' : '해당하는 할 일이 없어요'}
-          </h3>
-          <p className="text-sm text-gray-400">+ 버튼으로 할 일을 추가해보세요!</p>
+          <EmptyState pose="think" title={totalCount === 0 ? '아직 할 일이 없어요' : '해당하는 할 일이 없어요'} subtitle="함께 할 일을 추가해보세요" size={50} />
         </motion.div>
       ) : (
         <div className="space-y-2">
